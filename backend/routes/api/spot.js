@@ -75,7 +75,7 @@ router.get('/', async(req, res) => {
             [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
         ],
         include: [{model: Review, attributes: []}],
-        group: 'Reviews.id'
+        group: ['Spots.id', 'Reviews.id']
     })
 
 
