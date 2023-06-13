@@ -133,4 +133,35 @@ router.post('/', requireAuth, getCurrentUser, validateSpot, async(req,res) => {
 
 })
 
+
+router.post('/:spotId/images', requireAuth, getCurrentUser, async(req,res) => {
+    // req.user ---> gives you user info back
+    const spot = await Spot.findByPk(req.params.spotId)
+    const ownerId = spot.ownerId
+
+    if(ownerId !== req.currentUser.data.id) {
+        res.status(404)
+        res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+
+    const { url, preview } = req.body
+    const newImage = await SpotImage.create({
+        spotId: spot.id,
+        url,
+        preview
+    })
+
+    console.log(newImage.toJSON())
+    res.json({
+        id: newImage.id,
+        url: newImage.url,
+        preview: newImage.preview
+    })
+})
+
+
+
+
 module.exports = router;
