@@ -15,17 +15,20 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'ownerId'
       }),
       Spot.hasMany(models.SpotImage, {
-        foreignKey: 'spotId'
+        foreignKey: 'spotId',
+        onDelete: 'CASCADE'
       }),
       Spot.belongsToMany(models.User, {
         through: models.Review,
         foreignKey: 'spotId',
-        otherKey: 'userId'
+        otherKey: 'userId',
+        onDelete: 'CASCADE'
       }),
       Spot.belongsToMany(models.User, {
         through: models.Booking,
         foreignKey: 'spotId',
-        otherKey: 'userId'
+        otherKey: 'userId',
+        onDelete: 'CASCADE'
       })
     }
   }
@@ -42,7 +45,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     state: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [2,2],
+        isUppercase: true
+      }
     },
     country: {
       type: DataTypes.STRING,
