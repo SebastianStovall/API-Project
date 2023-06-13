@@ -2,6 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
+const { SpotImage } = require('../models')
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
@@ -10,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up (queryInterface, Sequelize) {
     options.tableName = 'SpotImages';
-    await queryInterface.bulkInsert(options, [
+    await SpotImage.bulkCreate([
       {
         spotId: 1,
         url: 'https://fakelinkOne.com',
@@ -29,7 +30,7 @@ module.exports = {
         preview: true
       }
 
-    ], {})
+    ], { validate: true })
   },
 
   async down (queryInterface, Sequelize) {

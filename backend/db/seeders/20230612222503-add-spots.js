@@ -2,6 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
+const { Spot } = require('../models')
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
@@ -10,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up (queryInterface, Sequelize) {
     options.tableName = 'Spots';
-    await queryInterface.bulkInsert(options, [
+    await Spot.bulkCreate([
       {
         ownerId: 1,
         address: 'fakeAddressOne',
@@ -21,7 +22,7 @@ module.exports = {
         lng: -97.7431,
         name: 'FakeNameOne',
         description: 'this is a goood spot',
-        price: 300.00
+        price: 200.00
       },
       {
         ownerId: 2,
@@ -33,7 +34,7 @@ module.exports = {
         lng: -88.3862,
         name: 'FakeNameTwo',
         description: 'this is the BEST spot',
-        price: 200.00
+        price: 400.00
       },
       {
         ownerId: 3,
@@ -45,9 +46,9 @@ module.exports = {
         lng: -74.0060,
         name: 'FakeNameThree',
         description: 'this is an alright spot',
-        price: 800.00
+        price: 300.00
       }
-    ], {})
+    ], { validate: true })
   },
 
   async down (queryInterface, Sequelize) {

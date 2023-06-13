@@ -2,6 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
+const { Review } = require('../models')
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
@@ -10,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up (queryInterface, Sequelize) {
     options.tableName = 'Reviews';
-    await queryInterface.bulkInsert(options, [
+    await Review.bulkCreate([
       {
         spotId: 1,
         userId: 1,
@@ -29,7 +30,7 @@ module.exports = {
         review: 'It was the best place i have ever stayed in',
         stars: 5
       }
-    ], {})
+    ], { validate: true })
   },
 
   async down (queryInterface, Sequelize) {
