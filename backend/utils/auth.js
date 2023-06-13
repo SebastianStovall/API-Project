@@ -75,4 +75,12 @@ const requireAuth = function (req, _res, next) {
 }
 
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+const getCurrentUser = async (req, res, next) => {
+    if(req.cookies.token) {
+        req.currentUser = jwt.decode(req.cookies.token)
+        return next()
+    }
+}
+
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, getCurrentUser };
