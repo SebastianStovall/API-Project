@@ -2,7 +2,7 @@ const express = require('express')
 const { Op } = require('sequelize');
 
 const { setTokenCookie, restoreUser, requireAuth, getCurrentUser } = require('../../utils/auth'); //import for auth functions
-const { Spot } = require('../../db/models');
+const { Spot, sequelize, Review, SpotImage } = require('../../db/models');
 
 const { check } = require('express-validator'); //imports for validator
 const { handleValidationErrors } = require('../../utils/validation'); //this function is written in utils/validation.js
@@ -58,8 +58,44 @@ const validateSpot = [
 
 
 router.get('/', async(req, res) => {
-    const allSpots = await Spot.findAll()
-    res.json(allSpots)
+    const allSpots = await Spot.findAll({
+        attributes: [
+            'id',
+            'address',
+            'city',
+            'state',
+            'country',
+            'lat',
+            'lng',
+            'name',
+            'description',
+            'price',
+            'createdAt',
+            'updatedAt',
+            [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
+        ],
+        include: [{model: Review, attributes: []}],
+        group: 'Reviews.id'
+    })
+
+
+    // need to use Promise.all for the array of promises
+    const modifiedSpots = await Promise.all( allSpots.map(async spot => {
+        spot = spot.toJSON()
+        let previewImg = await SpotImage.findOne({
+            attributes: ['url'],
+            where: {
+                spotId: spot.id
+            }
+        })
+
+        if(previewImg !== null) previewImg = previewImg.url // if its not null, we cant key into its property, so check its value before assigning the KVP
+        spot.previewImage = previewImg
+        return spot
+    }) )
+
+    res.json({ Spots: modifiedSpots })
+
 })
 
 router.post('/', requireAuth, getCurrentUser, validateSpot, async(req,res) => {
