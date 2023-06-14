@@ -6,6 +6,7 @@ const { Spot, sequelize, Review, SpotImage } = require('../../db/models');
 
 const { check } = require('express-validator'); //imports for validator
 const { handleValidationErrors } = require('../../utils/validation'); //this function is written in utils/validation.js
+const spot = require('../../db/models/spot');
 
 const router = express.Router();
 
@@ -161,6 +162,48 @@ router.post('/:spotId/images', requireAuth, getCurrentUser, async(req,res) => {
     })
 })
 
+
+router.get('/current', requireAuth, async(req,res) => {
+
+    const spotsOwnedByUser = await req.user.getSpots({
+        attributes: [
+            'id',
+            'address',
+            'city',
+            'state',
+            'country',
+            'lat',
+            'lng',
+            'name',
+            'description',
+            'price',
+            'createdAt',
+            'updatedAt',
+            [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
+        ],
+        include: [{model: Review, attributes: []}],
+        group: ['Spot.id', 'Reviews.id']
+    });
+
+
+    const modifiedSpots = await Promise.all( spotsOwnedByUser.map(async spot => {
+        spot = spot.toJSON()
+        let previewImg = await SpotImage.findOne({
+            attributes: ['url'],
+            where: {
+                preview: true,
+                spotId: spot.id
+            }
+        })
+
+        if(previewImg !== null) previewImg = previewImg.url // if its not null, we cant key into its property, so check its value before assigning the KVP
+        spot.previewImage = previewImg
+        return spot
+    }) )
+
+    res.json({Spots: modifiedSpots})
+
+})
 
 
 
