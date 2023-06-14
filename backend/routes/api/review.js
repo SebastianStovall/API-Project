@@ -108,7 +108,7 @@ router.post('/:reviewId/images', requireAuth, reviewImgValidator, async(req,res)
 
     const { url } = req.body
     const newReview = await ReviewImage.create({
-        reviewId: targetReview.userId,
+        reviewId: targetReview.id,
         url: url
     })
 
