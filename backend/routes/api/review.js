@@ -10,7 +10,7 @@ const { handleValidationErrors } = require('../../utils/validation'); //this fun
 const router = express.Router();
 
 
-router.get('/current', async(req,res) => {
+router.get('/current', requireAuth, async(req,res) => {
     const allUserReviews = await req.user.getReviews({
     attributes: ['id', 'userId', 'spotId', 'review', 'stars', 'createdAt', 'updatedAt'],
     include: [
