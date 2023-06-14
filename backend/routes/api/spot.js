@@ -138,12 +138,15 @@ router.post('/', requireAuth, getCurrentUser, validateSpot, async(req,res) => {
 })
 
 
-router.post('/:spotId/images', requireAuth, getCurrentUser, async(req,res) => {
-    // req.user ---> gives you user info back
+router.post('/:spotId/images', requireAuth, async(req,res) => {
     const spot = await Spot.findByPk(req.params.spotId)
-    const ownerId = spot.ownerId
 
-    if(ownerId !== req.currentUser.data.id) {
+    if(!spot) {
+        res.status(404)
+        res.json({
+            message: "Spot couldn't be found"
+        })
+    } else if (spot.ownerId !== req.user.id) {
         res.status(404)
         res.json({
             message: "Spot couldn't be found"
@@ -151,18 +154,20 @@ router.post('/:spotId/images', requireAuth, getCurrentUser, async(req,res) => {
     }
 
     const { url, preview } = req.body
-    const newImage = await SpotImage.create({
-        spotId: spot.id,
-        url,
-        preview
-    })
+    if(spot) {
+        const newImage = await SpotImage.create({
+            spotId: spot.id,
+            url,
+            preview
+        })
 
-    console.log(newImage.toJSON())
-    res.json({
-        id: newImage.id,
-        url: newImage.url,
-        preview: newImage.preview
-    })
+        res.json({
+            id: newImage.id,
+            url: newImage.url,
+            preview: newImage.preview
+        })
+    }
+
 })
 
 
@@ -265,11 +270,14 @@ router.get('/:spotId', async(req,res) => {
 
 
 router.put('/:spotId', requireAuth, validateSpot, async(req,res) => {
-
     const spot = await Spot.findByPk(req.params.spotId)
-    const ownerId = spot.ownerId
 
-    if(ownerId !== req.user.id) {
+    if(!spot) {
+        res.status(404)
+        res.json({
+            message: "Spot couldn't be found"
+        })
+    } else if (spot.ownerId !== req.user.id) {
         res.status(404)
         res.json({
             message: "Spot couldn't be found"
@@ -293,11 +301,6 @@ router.put('/:spotId', requireAuth, validateSpot, async(req,res) => {
         await spot.save()
         return res.json(spot)
 
-    } else {
-        res.status(404)
-        res.json({
-            message: "Spot couldn't be found"
-        })
     }
 
 })
