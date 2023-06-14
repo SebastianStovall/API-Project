@@ -2,7 +2,7 @@ const express = require('express')
 const { Op } = require('sequelize');
 
 const { setTokenCookie, restoreUser, requireAuth, getCurrentUser } = require('../../utils/auth'); //import for auth functions
-const { Spot, sequelize, Review, SpotImage, User } = require('../../db/models');
+const { Spot, sequelize, Review, SpotImage, User, ReviewImage } = require('../../db/models');
 
 const { check } = require('express-validator'); //imports for validator
 const { handleValidationErrors } = require('../../utils/validation'); //this function is written in utils/validation.js
@@ -211,6 +211,45 @@ router.get('/current', requireAuth, async(req,res) => {
     }) )
 
     res.json({Spots: modifiedSpots})
+
+})
+
+
+
+router.get('/:spotId/reviews', async(req, res, next) => {
+
+    const targetSpotId = Number(req.params.spotId)
+    const reviewsForSpot = await Review.findAll({
+        attributes: ['id', 'userId', 'spotId', 'review', 'stars', 'createdAt', 'updatedAt'],
+        where: {
+            spotId: targetSpotId
+        },
+        include: [ {model: User, attributes: ['id', 'firstName', 'lastName']} ]
+
+    })
+
+    const reviewPOJO = await Promise.all(reviewsForSpot.map(async (review) => {
+        review = review.toJSON()
+        const reviewImgArr = await ReviewImage.findAll({
+            attributes: ['id', 'url'],
+            where: {
+                reviewId: review.id
+            }
+        })
+
+        review.ReviewImages = reviewImgArr
+        return review
+
+    }))
+
+
+    if(reviewsForSpot.length === 0) {
+        res.status(404)
+        res.json({message: "Spot couldn't be found"})
+    } else {
+        res.json({Reviews: reviewPOJO})
+    }
+
 
 })
 
