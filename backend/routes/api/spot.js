@@ -117,6 +117,7 @@ router.post('/', requireAuth, getCurrentUser, validateSpot, async(req,res) => {
             description,
             price
         })
+        res.status(201)
         res.json(newSpot)
     }
 
@@ -262,6 +263,44 @@ router.get('/:spotId', async(req,res) => {
 
 })
 
+
+router.put('/:spotId', requireAuth, validateSpot, async(req,res) => {
+
+    const spot = await Spot.findByPk(req.params.spotId)
+    const ownerId = spot.ownerId
+
+    if(ownerId !== req.user.id) {
+        res.status(404)
+        res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+
+    const {address, city, state, country, lat, lng, name, description, price} = req.body
+    if(spot) {
+        spot.set({
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price
+        })
+
+        await spot.save()
+        return res.json(spot)
+
+    } else {
+        res.status(404)
+        res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+
+})
 
 
 module.exports = router;
