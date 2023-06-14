@@ -395,17 +395,17 @@ router.delete('/:spotId', requireAuth, async(req,res) => {
 router.post('/:spotId/reviews', requireAuth, validateReview, async(req,res) => {
     const {review, stars} = req.body
 
-    const seeUserReviews = await req.user.getReviews()
-    if (seeUserReviews.length >= 1) {
-        res.status(500)
-        return res.json({message: "User already has a review for this spot"})
-    }
-
     const doesSpotExist = await Spot.findByPk(req.params.spotId)
         if (!doesSpotExist) {
             res.status(404)
             return res.json({message: "Spot couldn't be found"})
         }
+
+    const seeUserReviews = await req.user.getReviews()
+    if (seeUserReviews.length >= 1) {
+        res.status(500)
+        return res.json({message: "User already has a review for this spot"})
+    }
 
     try {
         const newReview = await Review.create({
