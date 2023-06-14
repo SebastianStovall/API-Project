@@ -18,6 +18,27 @@ const reviewImgValidator = [
     handleValidationErrors
 ];
 
+const validateReview = [
+    check('review')
+    .exists({checkFalsy: true})
+    .withMessage('Review text is required')
+    .custom((async (value) => {
+        if(value.length > 500) throw new Error('Message must not exceed 500 characters')
+    })),
+    check('stars')
+    .exists({checkFalsy: true})
+    .withMessage('Please provide a star rating')
+    .custom(async (value) => {
+
+        if( isNaN(value) ) throw new Error('Star rating must be a number between 1 and 5')
+
+        if (value !== 1 && value !== 2 && value !== 3 && value !== 4 && value !==5 ) {
+            throw new Error('Star rating must be a number between 1 and 5')
+        }
+    }),
+    handleValidationErrors
+];
+
 
 router.get('/current', requireAuth, async(req,res) => {
     const allUserReviews = await req.user.getReviews({
@@ -96,6 +117,36 @@ router.post('/:reviewId/images', requireAuth, reviewImgValidator, async(req,res)
         url: newReview.url
     })
 })
+
+
+router.put('/:reviewId', requireAuth, validateReview, async(req,res) => {
+    const reviewToEdit = await Review.findByPk(req.params.reviewId)
+
+    if( !reviewToEdit ) {
+        res.status(404)
+        return res.json({message: "Review couldn't be found"})
+    }
+
+    if (reviewToEdit.userId !== req.user.id) {
+        res.status(404)
+        return res.json({message: "Review couldn't be found"})
+    }
+
+    const {review, stars} = req.body
+
+        reviewToEdit.set({
+            userId: req.user.id,
+            spotId: Number(req.params.reviewId),
+            review,
+            stars
+        })
+
+        res.status(200)
+        await reviewToEdit.save()
+        return res.json(reviewToEdit)
+
+})
+
 
 
 module.exports = router;
