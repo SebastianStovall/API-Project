@@ -151,7 +151,12 @@ router.put('/:reviewId', requireAuth, validateReview, async(req,res) => {
 router.delete('/:reviewId', requireAuth, async(req,res) => {
     const reviewToDelete = await Review.findByPk(req.params.reviewId)
 
-    if (req.user.id !== reviewToDelete.userId || !reviewToDelete) {
+    if(!reviewToDelete) {
+        res.status(404)
+        return res.json({message: "Review couldn't be found" })
+    }
+
+    if (req.user.id !== reviewToDelete.userId) {
         res.status(404)
         return res.json({message: "Review couldn't be found" })
     }
