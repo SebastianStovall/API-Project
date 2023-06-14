@@ -62,6 +62,7 @@ router.get('/', async(req, res) => {
     const allSpots = await Spot.findAll({
         attributes: [
             'id',
+            'ownerId',
             'address',
             'city',
             'state',
@@ -169,6 +170,7 @@ router.get('/current', requireAuth, async(req,res) => {
     const spotsOwnedByUser = await req.user.getSpots({
         attributes: [
             'id',
+            'ownerId',
             'address',
             'city',
             'state',
@@ -226,7 +228,7 @@ router.get('/:spotId', async(req,res) => {
             [sequelize.fn('AVG', sequelize.col('stars')), 'avgStarRating']
         ],
         include: [{model: Review, attributes: []}, {model: User, attributes: ['id', 'firstName', 'lastName']}],
-        group: ['Spot.id', 'Reviews.id']
+        group: ['Spot.id', 'Reviews.id', 'User.id']
     })
 
     if(!spot) {
