@@ -2,7 +2,7 @@ const express = require('express')
 const { Op } = require('sequelize');
 
 const { setTokenCookie, restoreUser, requireAuth, getCurrentUser } = require('../../utils/auth'); //import for auth functions
-const { Spot, sequelize, Review, SpotImage } = require('../../db/models');
+const { Spot, sequelize, Review, SpotImage, User } = require('../../db/models');
 
 const { check } = require('express-validator'); //imports for validator
 const { handleValidationErrors } = require('../../utils/validation'); //this function is written in utils/validation.js
@@ -203,6 +203,60 @@ router.get('/current', requireAuth, async(req,res) => {
     }) )
 
     res.json({Spots: modifiedSpots})
+
+})
+
+
+router.get('/:spotId', async(req,res) => {
+    const spot = await Spot.findByPk(req.params.spotId, {
+        attributes: [
+            'id',
+            'ownerId',
+            'address',
+            'city',
+            'state',
+            'country',
+            'lat',
+            'lng',
+            'name',
+            'description',
+            'price',
+            'createdAt',
+            'updatedAt',
+            [sequelize.fn('AVG', sequelize.col('stars')), 'avgStarRating']
+        ],
+        include: [{model: Review, attributes: []}, {model: User, attributes: ['id', 'firstName', 'lastName']}],
+        group: ['Spot.id', 'Reviews.id']
+    })
+
+    if(!spot) {
+        res.status(404)
+        res.json({
+            message: "Spot couldn't be found"
+        })
+    }
+
+    // use for numReviews KVP
+    const spotReviews = await spot.countReviews()
+    // use for SpotImages KVP
+    const spotImages = await spot.getSpotImages({
+        attributes: {
+            exclude: ['spotId', 'createdAt', 'updatedAt']
+        }
+    })
+    // use for Owner KVP
+    // const spotOwner = await spot.getUser()
+    // res.json(spotOwner)
+
+    let spotPOJO = spot.toJSON()
+    spotPOJO.numReviews = spotReviews
+    spotPOJO.SpotImages = spotImages
+
+    // for aliasing User key as Owner key
+    spotPOJO.Owner = spotPOJO.User
+    delete spotPOJO.User
+
+    res.json(spotPOJO)
 
 })
 
