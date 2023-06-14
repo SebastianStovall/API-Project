@@ -58,6 +58,28 @@ const validateSpot = [
 ];
 
 
+const validateReview = [
+    check('review')
+    .exists({checkFalsy: true})
+    .withMessage('Review text is required')
+    .custom((async (value) => {
+        if(value.length > 500) throw new Error('Message must not exceed 500 characters')
+    })),
+    check('stars')
+    .exists({checkFalsy: true})
+    .withMessage('Please provide a star rating')
+    .custom(async (value) => {
+
+        if( isNaN(value) ) throw new Error('Star rating must be a number between 1 and 5')
+
+        if (value !== 1 && value !== 2 && value !== 3 && value !== 4 && value !==5 ) {
+            throw new Error('Star rating must be a number between 1 and 5')
+        }
+    }),
+    handleValidationErrors
+];
+
+
 router.get('/', async(req, res) => {
     const allSpots = await Spot.findAll({
         attributes: [
@@ -367,6 +389,49 @@ router.delete('/:spotId', requireAuth, async(req,res) => {
         })
     }
 
+})
+
+
+router.post('/:spotId/reviews', requireAuth, validateReview, async(req,res) => {
+    const {review, stars} = req.body
+
+    const seeUserReviews = await req.user.getReviews()
+    if (seeUserReviews.length >= 1) {
+        res.status(500)
+        return res.json({message: "User already has a review for this spot"})
+    }
+
+    const doesSpotExist = await Spot.findByPk(req.params.spotId)
+        if (!doesSpotExist) {
+            res.status(404)
+            return res.json({message: "Spot couldn't be found"})
+        }
+
+    try {
+        const newReview = await Review.create({
+            userId: req.user.id,
+            spotId: Number(req.params.spotId),
+            review,
+            stars
+        })
+        console.log(newReview.id)
+        res.status(201)
+        return res.json(newReview)
+    }
+
+    catch (e) {
+        const errors = {}
+        e.errors.forEach(error => {
+            const path = error.path
+            console.log(error.message)
+            errors[path] = error.message
+        })
+        res.status(400)
+        res.json({
+            message: 'Bad Request',
+            errors: errors
+        })
+    }
 })
 
 
