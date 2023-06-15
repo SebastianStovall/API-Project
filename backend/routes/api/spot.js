@@ -540,40 +540,25 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) =>
         await Promise.all(bookings.map( async(booking) =>{
             booking = booking.toJSON()
 
-            let bookingSD = booking.startDate
-            let bookingED = booking.endDate
+            let existingBookSD = booking.startDate
+            let existingBookSDDate = new Date(existingBookSD)
+            const bookingStartTime = existingBookSDDate.getTime()
 
-            const yearSD = bookingSD.getFullYear()
-            let monthSD = bookingSD.getMonth() + 1 // month is zero indexed
-            if( monthSD <= 9 ) {
-                monthSD = `${0}${monthSD}`
-            }
-            let dateSD = bookingSD.getDate()
-            if(dateSD <= 9) {
-                dateSD = `${0}${dateSD}`
-            }
+            let existingBookED = booking.endDate
+            let existingBookEDDate = new Date(existingBookED)
+            const bookingEndTime = existingBookEDDate.getTime()
 
-            let existingBookSDNum = Number(yearSD+monthSD+dateSD)
+            let date = new Date(startDate)
+            const startDateTime = date.getTime()
 
-            const yearED = bookingED.getFullYear()
-            let monthED = bookingED.getMonth() + 1
-            if( monthED <= 9 ) {
-                monthED = `${0}${monthED}`
-            }
-            let dateED = bookingED.getDate()
-            if(dateED <= 9) {
-                dateED = `${0}${dateED}`
-            }
+            let date2 = new Date(endDate)
+            const endDateTime = date2.getTime()
 
-            let existingBookEDNum = Number(yearED+monthED+dateED)
-
-            const startDateNum = parseInt(startDate.split("-").join(""))
-            const endDateNum = parseInt(endDate.split("-").join(""))
-
-            // first case: if existing bookingSD is within the NEW booking range
-            // second case: if existing bookingED is within the NEW booking range
-            // third case: if NEW booking falls within an EXISTING booking range
-            if( (existingBookSDNum >= startDateNum && existingBookSDNum <= endDateNum) || (existingBookEDNum >= startDateNum && existingBookEDNum <= endDateNum) || (startDateNum >= existingBookSDNum && endDateNum <= existingBookEDNum)) {
+            if(
+            (bookingStartTime >= startDateTime && bookingStartTime <= endDateTime) ||
+            (bookingEndTime >= startDateTime && bookingEndTime <= endDateTime) ||
+            (startDateTime >= bookingStartTime && endDateTime <= bookingEndTime)
+            ) {
                 conflict.push("true")
             }
             return booking

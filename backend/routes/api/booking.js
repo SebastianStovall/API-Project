@@ -70,7 +70,6 @@ router.get('/current', requireAuth, async(req,res) => {
 
 router.put('/:bookingId', requireAuth, validateBooking, async(req,res) => {
     const bookingToEdit = await Booking.findByPk(req.params.bookingId)
-    // return res.json(bookingToEdit.endDate)
 
     if(!bookingToEdit) {
         res.status(404)
@@ -93,12 +92,8 @@ router.put('/:bookingId', requireAuth, validateBooking, async(req,res) => {
     let currentTime = currentDate.getTime()
 
     let currentBookingED = bookingToEdit.endDate
-    let currentBookingEDTime = currentBookingED.getTime()
-
-    // return res.json({
-    //     currentTIME: currentTime,
-    //     bookingTIME: currentBookingEDTime
-    // })
+    let currentBookingEDDate = new Date(currentBookingED)
+    let currentBookingEDTime = currentBookingEDDate.getTime()
 
     if( currentTime >= currentBookingEDTime ) {
         res.status(403)
@@ -112,24 +107,19 @@ router.put('/:bookingId', requireAuth, validateBooking, async(req,res) => {
 
     const spot = await bookingToEdit.getSpot()
     const allBookingsForSpot = await spot.getBookings()
-    // return res.json(allBookingsForSpot)
 
     let conflict = []
     await Promise.all(allBookingsForSpot.map( async(booking) =>{
         booking = booking.toJSON()
         let currentBookingSD = booking.startDate
+        let currentBookingSDDate = new Date(currentBookingSD)
+
         let currentBookingED = booking.endDate
-        const currentBookSDTime = currentBookingSD.getTime()
-        const currentBookEDTime = currentBookingED.getTime()
+        let currentBookingEDDate = new Date(currentBookingED)
 
-        // return res.json(booking)
-        // return res.json(booking.userId)
-        // return res.json(req.user.id)
-        // return res.json( ( (booking.userId !== req.user.id) === false ) )
+        const currentBookSDTime = currentBookingSDDate.getTime()
+        const currentBookEDTime = currentBookingEDDate.getTime()
 
-        // first case: if existing bookingSD is within the NEW booking range
-        // second case: if existing bookingED is within the NEW booking range
-        // third case: if NEW booking falls within an EXISTING booking range
         if(
             (
                 ( currentBookSDTime >= requestStartTime && currentBookSDTime <= requestEndTime) ||
@@ -163,14 +153,7 @@ router.put('/:bookingId', requireAuth, validateBooking, async(req,res) => {
 
     await bookingToEdit.save()
 
-    return res.json({
-        id: bookingToEdit.id,
-        spotId: bookingToEdit.spotId,
-        startDate,
-        endDate,
-        createdAt: bookingToEdit.createdAt,
-        updatedAt: bookingToEdit.updatedAt
-    })
+    return res.json(bookingToEdit)
 })
 
 
