@@ -79,6 +79,30 @@ const validateReview = [
     handleValidationErrors
 ];
 
+const validateBooking = [
+    check('startDate')
+    .exists({checkFalsy: true})
+    .withMessage('Start Date is required')
+    .custom(async (value) => {
+        const valueArr = value.split('-')
+        if(valueArr[0].length !== 4 || valueArr[1].length !== 2 || valueArr[2].length !== 2 ) throw new Error("Please enter the date in the format 'YYYY-MM-DD'")
+    }),
+    check('endDate')
+    .exists({checkFalsy: true})
+    .withMessage('End Date is required')
+    .custom(async (value, {req}) => {
+        const valueArr = value.split('-')
+        if(valueArr[0].length !== 4 || valueArr[1].length !== 2 || valueArr[2].length !== 2 ) throw new Error("Please enter the date in the format 'YYYY-MM-DD'")
+
+        let startDateValue = req.body.startDate
+        // requie the start date information by including it in params, then convert the date to a number and compare it against the end date number value
+        const startDateNumber = parseInt(startDateValue.split("-").join(""))
+        const endDateNumber = parseInt(value.split("-").join(""))
+        if( endDateNumber <= startDateNumber ) throw new Error("endDate cannot be on or before startDate")
+    }),
+    handleValidationErrors
+];
+
 
 router.get('/', async(req, res) => {
     const allSpots = await Spot.findAll({
@@ -477,6 +501,94 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async(req,res) => {
             errors: errors
         })
     }
+})
+
+
+router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) => {
+    const spotToBook = await Spot.findOne({
+        where: {
+            id: req.params.spotId
+        }
+    })
+
+    if(!spotToBook) {
+        res.status(404)
+        return res.json({message: "Spot couldn't be found"})
+    }
+
+    if (spotToBook.ownerId === req.user.id) {
+        res.status(401) //unauthorized
+        return res.json({message: "You are not authorized to create bookings for spots you currently own"})
+    }
+
+    const {startDate, endDate} = req.body
+
+    let conflict = [];
+    const bookings = await spotToBook.getBookings()
+        await Promise.all(bookings.map( async(booking) =>{
+            booking = booking.toJSON()
+
+            let bookingSD = booking.startDate
+            let bookingED = booking.endDate
+
+            const yearSD = bookingSD.getFullYear()
+            let monthSD = bookingSD.getMonth() + 1 // month is zero indexed
+            if( monthSD <= 9 ) {
+                monthSD = `${0}${monthSD}`
+            }
+            let dateSD = bookingSD.getDate()
+            if(dateSD <= 9) {
+                dateSD = `${0}${dateSD}`
+            }
+
+            let existingBookSDNum = Number(yearSD+monthSD+dateSD)
+
+            const yearED = bookingED.getFullYear()
+            let monthED = bookingED.getMonth() + 1
+            if( monthED <= 9 ) {
+                monthED = `${0}${monthED}`
+            }
+            let dateED = bookingED.getDate()
+            if(dateED <= 9) {
+                dateED = `${0}${dateED}`
+            }
+
+            let existingBookEDNum = Number(yearED+monthED+dateED)
+
+            const startDateNum = parseInt(startDate.split("-").join(""))
+            const endDateNum = parseInt(endDate.split("-").join(""))
+
+            // first case: if existing bookingSD is within the NEW booking range
+            // second case: if existing bookingED is within the NEW booking range
+            // third case: if NEW booking falls within an EXISTING booking range
+            if( (existingBookSDNum >= startDateNum && existingBookSDNum <= endDateNum) || (existingBookEDNum >= startDateNum && existingBookEDNum <= endDateNum) || (startDateNum >= existingBookSDNum && endDateNum <= existingBookEDNum)) {
+                conflict.push("true")
+            }
+            return booking
+        }))
+
+        
+    if(conflict.length >= 1) {
+        res.status(403)
+            return res.json({
+                message: "Sorry, this spot is already booked for the specified dates",
+                errors: {
+                    startDate: "Start date conflicts with an existing booking",
+                    endDate: "End date conflicts with an existing booking"
+                }
+            })
+    }
+
+
+    const newBooking = await Booking.create({
+        spotId: spotToBook.id,
+        userId: req.user.id,
+        startDate,
+        endDate
+    })
+
+    return res.json(newBooking)
+
 })
 
 
