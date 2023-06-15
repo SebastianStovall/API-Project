@@ -2,7 +2,7 @@ const express = require('express')
 const { Op } = require('sequelize');
 
 const { setTokenCookie, restoreUser, requireAuth, getCurrentUser } = require('../../utils/auth'); //import for auth functions
-const { Spot, sequelize, Review, SpotImage, User, ReviewImage } = require('../../db/models');
+const { Spot, sequelize, Review, SpotImage, User, ReviewImage, Booking } = require('../../db/models');
 
 const { check } = require('express-validator'); //imports for validator
 const { handleValidationErrors } = require('../../utils/validation'); //this function is written in utils/validation.js
@@ -272,6 +272,44 @@ router.get('/:spotId/reviews', async(req, res, next) => {
         res.json({Reviews: reviewPOJO})
     }
 
+
+})
+
+
+router.get('/:spotId/bookings', requireAuth, async(req,res) => {
+    const allSpotsForSpotId = await Booking.findAll({
+        where: {
+            spotId: req.params.spotId
+        }
+    })
+
+    if(allSpotsForSpotId.length === 0) {
+        res.status(404)
+        return res.json({message: "Spot couldn't be found"})
+    }
+
+    const bookingPOJO = await Promise.all(allSpotsForSpotId.map(async (booking) => {
+        // if the spot belongs to you
+        let spot = await booking.getSpot()
+        if(spot.ownerId === req.user.id) {
+            let user = await booking.getUser({
+                attributes: ['id', 'firstName', 'lastName']
+            })
+            booking = booking.toJSON()
+            booking.User = user
+            return booking
+        // if the spot DOES NOT belong to you
+        } else {
+            booking = {
+                spotId: booking.spotId,
+                startDate: booking.startDate,
+                endDate: booking.endDate
+            }
+            return booking
+        }
+    }))
+
+    return res.json({Bookings: bookingPOJO})
 
 })
 
