@@ -157,5 +157,41 @@ router.put('/:bookingId', requireAuth, validateBooking, async(req,res) => {
 })
 
 
+router.delete('/:bookingId', requireAuth, async(req,res) => {
+    const bookingToDelete = await Booking.findByPk(req.params.bookingId)
+    // return res.json(bookingToDelete)
+
+    if(!bookingToDelete) {
+        res.status(404)
+        return res.json({message: "Booking couldn't be found"})
+    }
+
+    if ( req.user.id !== bookingToDelete.userId ) {
+
+        const findSpot = await bookingToDelete.getSpot()
+        if (findSpot.ownerId !== req.user.id) {
+            res.status(401)
+            return res.json({message: 'You do not have permission to delete this booking'})
+        }
+
+    }
+
+    const startDateOfBooking = bookingToDelete.startDate
+    const dateOfBooking = new Date(startDateOfBooking)
+    const timeOfBooking = dateOfBooking.getTime()
+
+    const currentDate = new Date()
+    const currentTime = currentDate.getTime()
+
+    if (currentTime >= timeOfBooking) {
+        res.status(403)
+        return res.json({message: "Bookings that have been started can't be deleted"})
+    }
+
+    await bookingToDelete.destroy()
+    return res.json({message: "Successfully deleted"})
+
+})
+
 
 module.exports = router;
