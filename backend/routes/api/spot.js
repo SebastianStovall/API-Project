@@ -523,6 +523,18 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) =>
 
     const {startDate, endDate} = req.body
 
+    let currentDate = new Date()
+    let currentTime = currentDate.getTime()
+
+    let requestStartDate = new Date(startDate)
+    const requestStartTime = requestStartDate.getTime()
+
+    if( requestStartTime <= currentTime ) {
+        res.status(403)
+        return res.json({message: "Booking must be placed for sometime in the future"})
+    }
+
+
     let conflict = [];
     const bookings = await spotToBook.getBookings()
         await Promise.all(bookings.map( async(booking) =>{
@@ -567,7 +579,7 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) =>
             return booking
         }))
 
-        
+
     if(conflict.length >= 1) {
         res.status(403)
             return res.json({
