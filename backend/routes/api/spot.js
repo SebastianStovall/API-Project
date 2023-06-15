@@ -523,7 +523,7 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) =>
 
     const {startDate, endDate} = req.body
 
-
+    let conflict = [];
     const bookings = await spotToBook.getBookings()
         await Promise.all(bookings.map( async(booking) =>{
             booking = booking.toJSON()
@@ -531,21 +531,53 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) =>
             let bookingSD = booking.startDate
             let bookingED = booking.endDate
 
+            const yearSD = bookingSD.getFullYear()
+            let monthSD = bookingSD.getMonth() + 1 // month is zero indexed
+            if( monthSD <= 9 ) {
+                monthSD = `${0}${monthSD}`
+            }
+            let dateSD = bookingSD.getDate()
+            if(dateSD <= 9) {
+                dateSD = `${0}${dateSD}`
+            }
+
+            let existingBookSDNum = Number(yearSD+monthSD+dateSD)
+
+            const yearED = bookingED.getFullYear()
+            let monthED = bookingED.getMonth() + 1
+            if( monthED <= 9 ) {
+                monthED = `${0}${monthED}`
+            }
+            let dateED = bookingED.getDate()
+            if(dateED <= 9) {
+                dateED = `${0}${dateED}`
+            }
+
+            let existingBookEDNum = Number(yearED+monthED+dateED)
+
+            const startDateNum = parseInt(startDate.split("-").join(""))
+            const endDateNum = parseInt(endDate.split("-").join(""))
+
             // first case: if existing bookingSD is within the NEW booking range
             // second case: if existing bookingED is within the NEW booking range
             // third case: if NEW booking falls within an EXISTING booking range
-            if( (bookingSD >= startDate && bookingSD <= endDate) || (bookingED >= startDate && bookingED <= endDate) || (startDate >= bookingSD && endDate <= bookingED)) {
-                res.status(403)
-                return res.json({
-                    message: "Sorry, this spot is already booked for the specified dates",
-                    errors: {
-                        startDate: "Start date conflicts with an existing booking",
-                        endDate: "End date conflicts with an existing booking"
-                    }
-                })
+            if( (existingBookSDNum >= startDateNum && existingBookSDNum <= endDateNum) || (existingBookEDNum >= startDateNum && existingBookEDNum <= endDateNum) || (startDateNum >= existingBookSDNum && endDateNum <= existingBookEDNum)) {
+                conflict.push("true")
             }
             return booking
         }))
+
+        
+    if(conflict.length >= 1) {
+        res.status(403)
+            return res.json({
+                message: "Sorry, this spot is already booked for the specified dates",
+                errors: {
+                    startDate: "Start date conflicts with an existing booking",
+                    endDate: "End date conflicts with an existing booking"
+                }
+            })
+    }
 
 
     const newBooking = await Booking.create({
