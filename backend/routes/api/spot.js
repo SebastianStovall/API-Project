@@ -541,10 +541,10 @@ router.put('/:spotId', requireAuth, validateSpotEditOnly, async(req,res) => {
         })
     }
 
-    const {city, state, country, lat, lng, name, description, price} = req.body
+    const {address, city, state, country, lat, lng, name, description, price} = req.body
     if(spot) {
         spot.set({
-            // address,
+            address,
             city,
             state,
             country,
@@ -554,6 +554,21 @@ router.put('/:spotId', requireAuth, validateSpotEditOnly, async(req,res) => {
             description,
             price
         })
+
+
+        const doesAddExist = await Spot.findOne({
+            where: {
+                address: spot.address,
+                id: {
+                    [Op.ne]: req.params.spotId
+                }
+            }
+        })
+
+        if(doesAddExist) {
+            res.status(401)
+            return res.json({message: 'Address is already taken by another user'})
+        }
 
         await spot.save()
         return res.json(spot)
