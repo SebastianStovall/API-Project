@@ -105,31 +105,101 @@ const validateBooking = [
 
 
 router.get('/', async(req, res) => {
+
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
+    const pagination = {}
+
+    let errorObj = {message: 'Bad Request', errors: {}}
+
+    if(page < 1) {
+        errorObj.errors.page = "Page must be greater than or equal to 1"
+    }
+    if(size < 1) {
+        errorObj.errors.size = "Size must be greater than or equal to 1"
+    }
+
+    if( page > 10 || isNaN(Number(page)) || !page ) page = 1
+    if( size > 20 || isNaN(Number(size)) || !size ) size = 20
+
+    pagination.limit = size
+    pagination.offset = size * (page - 1)
+
+    if(maxLat && isNaN(Number(maxLat)) )  {
+        errorObj.errors.minLat = "Maximum latitude is invalid"
+    }
+    if(minLat && isNaN(Number(minLat)) )  {
+        errorObj.errors.minLat = "Minimum latitude is invalid"
+    }
+    if(minLng && isNaN(Number(minLng)) ) {
+        errorObj.errors.minLng = "Minimum longitude is invalid"
+    }
+    if(maxLng && isNaN(Number(maxLng)) ) {
+        errorObj.errors.maxLng = "Maximum longitude is invalid"
+    }
+    if(minPrice && isNaN(Number(minPrice)) || ( Number(minPrice) < 0 ) ) {
+        errorObj.errors.minPrice = "Minimum price must be greater than or equal to 0"
+    }
+    if(maxPrice && isNaN(Number(maxPrice)) || (Number(maxPrice) < 0) ) {
+        errorObj.errors.maxPrice = "Maximum price must be greater than or equal to 0"
+    }
+
+
+    if(Object.keys(errorObj.errors).length >= 1) {
+        res.status(400)
+        return res.json(errorObj)
+    }
+
+    const where = {}
+
+    if(maxLat) {
+        where.lat = {
+            [Op.lte]: Number(maxLat)
+        }
+    }
+    if(minLat) {
+        where.lat = {
+            ...where.lat,
+            [Op.gte]: Number(minLat)
+        }
+    }
+    if(maxLng) {
+        where.lng = {
+            [Op.lte]: Number(maxLng)
+        }
+    }
+    if(minLng) {
+        where.lng = {
+            ...where.lng,
+            [Op.gte]: Number(minLng)
+        }
+    }
+    if(maxPrice) {
+        where.price = {
+            [Op.lte]: Number(maxPrice)
+        }
+    }
+    if(minPrice) {
+        where.price = {
+            ...where.price,
+            [Op.gte]: Number(minPrice)
+        }
+    }
+
     const allSpots = await Spot.findAll({
-        attributes: [
-            'id',
-            'ownerId',
-            'address',
-            'city',
-            'state',
-            'country',
-            'lat',
-            'lng',
-            'name',
-            'description',
-            'price',
-            'createdAt',
-            'updatedAt',
-            [sequelize.fn('AVG', sequelize.col('stars')), 'avgRating']
-        ],
-        include: [{model: Review, attributes: []}],
-        group: ['Spot.id', 'Reviews.id']
+        where,
+        ...pagination
     })
 
 
-    // need to use Promise.all for the array of promises
-    const modifiedSpots = await Promise.all( allSpots.map(async spot => {
-        spot = spot.toJSON()
+    const modifiedSpots = await Promise.all( await allSpots.map(async(spot) => {
+        let sum = 0
+        const allReviewsForSpot = await spot.getReviews()
+        const totalNumReviews = await spot.countReviews()
+        allReviewsForSpot.map((review) => {
+            sum = sum + review.stars
+            return
+        })
+
         let previewImg = await SpotImage.findOne({
             attributes: ['url'],
             where: {
@@ -138,10 +208,16 @@ router.get('/', async(req, res) => {
             }
         })
 
+        spot = spot.toJSON()
+
+        const average = Number((sum / totalNumReviews).toFixed(1))
+        spot.avgRating = average
+
         if(previewImg !== null) previewImg = previewImg.url // if its not null, we cant key into its property, so check its value before assigning the KVP
         spot.previewImage = previewImg
-        return spot
-    }) )
+
+        return spot;
+    }))
 
     res.json({ Spots: modifiedSpots })
 
