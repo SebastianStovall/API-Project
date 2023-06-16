@@ -81,7 +81,7 @@ const reviewPOJO = await Promise.all(allUserReviews.map(async (review) => {
 }))
 
 
-    res.json({Reviews: reviewPOJO})
+    return res.json({Reviews: reviewPOJO})
 
 })
 
