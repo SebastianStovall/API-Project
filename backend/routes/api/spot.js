@@ -219,7 +219,7 @@ router.get('/', async(req, res) => {
         return spot;
     }))
 
-    res.json({ Spots: modifiedSpots })
+    res.json({ Spots: modifiedSpots, page: Number(page), size: Number(size) })
 
 })
 
@@ -240,7 +240,7 @@ router.post('/', requireAuth, getCurrentUser, validateSpot, async(req,res) => {
             price
         })
         res.status(201)
-        res.json(newSpot)
+        return res.json(newSpot)
     }
 
     catch (e) {
@@ -251,7 +251,7 @@ router.post('/', requireAuth, getCurrentUser, validateSpot, async(req,res) => {
             errors[path] = error.message
         })
         res.status(400)
-        res.json({
+        return res.json({
             message: 'Bad Request',
             errors: errors
         })
@@ -265,12 +265,12 @@ router.post('/:spotId/images', requireAuth, async(req,res) => {
 
     if(!spot) {
         res.status(404)
-        res.json({
+        return res.json({
             message: "Spot couldn't be found"
         })
     } else if (spot.ownerId !== req.user.id) {
         res.status(404)
-        res.json({
+        return res.json({
             message: "Spot couldn't be found"
         })
     }
@@ -283,7 +283,7 @@ router.post('/:spotId/images', requireAuth, async(req,res) => {
             preview
         })
 
-        res.json({
+        return res.json({
             id: newImage.id,
             url: newImage.url,
             preview: newImage.preview
@@ -332,7 +332,7 @@ router.get('/current', requireAuth, async(req,res) => {
         return spot
     }) )
 
-    res.json({Spots: modifiedSpots})
+    return res.json({Spots: modifiedSpots})
 
 })
 
@@ -367,9 +367,9 @@ router.get('/:spotId/reviews', async(req, res, next) => {
 
     if(reviewsForSpot.length === 0) {
         res.status(404)
-        res.json({message: "Spot couldn't be found"})
+        return res.json({message: "Spot couldn't be found"})
     } else {
-        res.json({Reviews: reviewPOJO})
+        return res.json({Reviews: reviewPOJO})
     }
 
 
@@ -463,7 +463,7 @@ router.get('/:spotId', async(req,res) => {
     spotPOJO.Owner = spotPOJO.User
     delete spotPOJO.User
 
-    res.json(spotPOJO)
+    return res.json(spotPOJO)
 
 })
 
@@ -473,12 +473,12 @@ router.put('/:spotId', requireAuth, validateSpot, async(req,res) => {
 
     if(!spot) {
         res.status(404)
-        res.json({
+        return res.json({
             message: "Spot couldn't be found"
         })
     } else if (spot.ownerId !== req.user.id) {
         res.status(404)
-        res.json({
+        return res.json({
             message: "Spot couldn't be found"
         })
     }
@@ -510,19 +510,19 @@ router.delete('/:spotId', requireAuth, async(req,res) => {
 
     if(!spot) {
         res.status(404)
-        res.json({
+        return res.json({
             message: "Spot couldn't be found"
         })
     } else if (spot.ownerId !== req.user.id) {
         res.status(404)
-        res.json({
+        return res.json({
             message: "Spot couldn't be found"
         })
     }
 
     if(spot) {
         await spot.destroy()
-        res.json({
+        return res.json({
             message: "Successfully deleted"
         })
     }
@@ -572,7 +572,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async(req,res) => {
             errors[path] = error.message
         })
         res.status(400)
-        res.json({
+        return res.json({
             message: 'Bad Request',
             errors: errors
         })
