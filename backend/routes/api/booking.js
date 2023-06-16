@@ -100,10 +100,10 @@ router.put('/:bookingId', requireAuth, validateBooking, async(req,res) => {
         return res.json({message: "Past bookings can't be modified"})
     }
 
-    if( requestStartTime <= currentTime ) {
-        res.status(403)
-        return res.json({message: "Booking must be placed for sometime in the future"})
-    }
+    // if( requestStartTime <= currentTime ) {
+    //     res.status(403)
+    //     return res.json({message: "Booking must be placed for sometime in the future"})
+    // }
 
     const spot = await bookingToEdit.getSpot()
     const allBookingsForSpot = await spot.getBookings()
