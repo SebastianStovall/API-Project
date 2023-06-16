@@ -135,8 +135,8 @@ router.put('/:reviewId', requireAuth, validateReview, async(req,res) => {
     const {review, stars} = req.body
 
         reviewToEdit.set({
-            userId: req.user.id,
-            spotId: Number(req.params.reviewId),
+            // userId: req.user.id,
+            // spotId: Number(req.params.reviewId),
             review,
             stars
         })

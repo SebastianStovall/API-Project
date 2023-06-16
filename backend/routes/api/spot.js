@@ -58,6 +58,44 @@ const validateSpot = [
 ];
 
 
+const validateSpotEditOnly = [
+    check('address')
+    .exists({checkFalsy: true})
+    .withMessage('Street address is required'),
+    check('city')
+    .exists({checkFalsy: true})
+    .withMessage('City is required'),
+    check('state')
+    .exists({checkFalsy: true})
+    .withMessage('State is required')
+    .custom(async (value) => {
+        if(value.length !== 2 || value !== value.toUpperCase()) throw new Error('State must be in the format of two uppercase letters (e.g., NY)')
+    }),
+    check('country')
+    .exists({checkFalsy: true})
+    .withMessage('Country is required'),
+    check('lat')
+    .exists({checkFalsy: true})
+    .withMessage('Latitude is not valid'),
+    check('lng')
+    .exists({checkFalsy: true})
+    .withMessage('Longitude is not valid'),
+    check('name')
+    .exists({checkFalsy: true})
+    .withMessage('please provide a name for the location'),
+    check('description')
+    .exists({checkFalsy: true})
+    .withMessage('Description is required'),
+    check('price')
+    .exists({checkFalsy: true})
+    .withMessage('Price per day is required')
+    .custom(async (value) => {
+        if(typeof value !== 'number') throw new Error('price must be a decimal value (e.g., 58.00)')
+    }),
+    handleValidationErrors
+];
+
+
 const validateReview = [
     check('review')
     .exists({checkFalsy: true})
@@ -237,7 +275,8 @@ router.post('/', requireAuth, getCurrentUser, validateSpot, async(req,res) => {
             lng,
             name,
             description,
-            price
+            price: Number(price)
+            // postgres keeps saving price as a "string" ^
         })
         res.status(201)
         return res.json(newSpot)
@@ -277,11 +316,30 @@ router.post('/:spotId/images', requireAuth, async(req,res) => {
 
     const { url, preview } = req.body
     if(spot) {
-        const newImage = await SpotImage.create({
+        // const newImage = await SpotImage.create({
+        //     spotId: spot.id,
+        //     url,
+        //     preview
+        // })
+
+        const newImage = SpotImage.build({
             spotId: spot.id,
             url,
             preview
         })
+
+        const allCurrentPreviewImages = await spot.getSpotImages({
+            where: {
+                preview: true
+            }
+        })
+
+        if(allCurrentPreviewImages.length > 0 && newImage.preview === true) {
+            let currPreviewImg = allCurrentPreviewImages[0]
+            await currPreviewImg.destroy()
+        }
+
+        await newImage.save()
 
         return res.json({
             id: newImage.id,
@@ -468,7 +526,7 @@ router.get('/:spotId', async(req,res) => {
 })
 
 
-router.put('/:spotId', requireAuth, validateSpot, async(req,res) => {
+router.put('/:spotId', requireAuth, validateSpotEditOnly, async(req,res) => {
     const spot = await Spot.findByPk(req.params.spotId)
 
     if(!spot) {
@@ -483,10 +541,10 @@ router.put('/:spotId', requireAuth, validateSpot, async(req,res) => {
         })
     }
 
-    const {address, city, state, country, lat, lng, name, description, price} = req.body
+    const {city, state, country, lat, lng, name, description, price} = req.body
     if(spot) {
         spot.set({
-            address,
+            // address,
             city,
             state,
             country,

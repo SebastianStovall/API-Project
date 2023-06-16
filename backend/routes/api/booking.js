@@ -127,7 +127,7 @@ router.put('/:bookingId', requireAuth, validateBooking, async(req,res) => {
                 (requestStartTime >= currentBookSDTime && requestEndTime <= currentBookEDTime)
             )
             &&
-            ( booking.userId !== req.user.id )
+            ( booking.id !== bookingToEdit.id )
             ) {
             conflict.push("true")
         }
