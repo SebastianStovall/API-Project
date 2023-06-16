@@ -19,8 +19,8 @@ router.delete('/:imageId', requireAuth, async(req,res) => {
 
     const associatedReview = await targetReviewImg.getReview()
     if ( req.user.id !== associatedReview.userId ) {
-        res.status(404)
-        return res.json({message: "Review Image couldn't be found"})
+        res.status(401)
+        return res.json({message: "You do not have permission to delete this review image"})
     }
 
     await targetReviewImg.destroy()

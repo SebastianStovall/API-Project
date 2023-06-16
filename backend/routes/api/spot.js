@@ -269,9 +269,9 @@ router.post('/:spotId/images', requireAuth, async(req,res) => {
             message: "Spot couldn't be found"
         })
     } else if (spot.ownerId !== req.user.id) {
-        res.status(404)
+        res.status(401)
         return res.json({
-            message: "Spot couldn't be found"
+            message: "You do not have permission to add an image to this spot"
         })
     }
 
@@ -477,9 +477,9 @@ router.put('/:spotId', requireAuth, validateSpot, async(req,res) => {
             message: "Spot couldn't be found"
         })
     } else if (spot.ownerId !== req.user.id) {
-        res.status(404)
+        res.status(401)
         return res.json({
-            message: "Spot couldn't be found"
+            message: "You do not have permission to edit this spot"
         })
     }
 
@@ -514,9 +514,9 @@ router.delete('/:spotId', requireAuth, async(req,res) => {
             message: "Spot couldn't be found"
         })
     } else if (spot.ownerId !== req.user.id) {
-        res.status(404)
+        res.status(401)
         return res.json({
-            message: "Spot couldn't be found"
+            message: "You do not have permission to delete this spot"
         })
     }
 

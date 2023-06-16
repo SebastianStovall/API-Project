@@ -9,7 +9,6 @@ const router = express.Router();
 
 router.delete('/:imageId', requireAuth, async(req,res) => {
     const targetSpotImg = await SpotImage.findByPk(req.params.imageId)
-    // return res.json(targetSpotImg)
 
     if(!targetSpotImg) {
         res.status(404)
@@ -18,8 +17,8 @@ router.delete('/:imageId', requireAuth, async(req,res) => {
 
     const getAssociatedSpot = await targetSpotImg.getSpot()
     if(req.user.id !== getAssociatedSpot.ownerId) {
-        res.status(404)
-        return res.json({message: "Spot Image couldn't be found"})
+        res.status(401)
+        return res.json({message: "You do not have permission to delete this spot image"})
     }
 
     await targetSpotImg.destroy()

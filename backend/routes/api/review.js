@@ -96,8 +96,8 @@ router.post('/:reviewId/images', requireAuth, reviewImgValidator, async(req,res)
     }
 
     if (targetReview.userId !== req.user.id) {
-        res.status(404)
-        return res.json({message: "Review couldn't be found"})
+        res.status(401)
+        return res.json({message: "You do not have permission to add an image to this review"})
     }
 
     const reviews = await targetReview.getReviewImages()
@@ -128,8 +128,8 @@ router.put('/:reviewId', requireAuth, validateReview, async(req,res) => {
     }
 
     if (reviewToEdit.userId !== req.user.id) {
-        res.status(404)
-        return res.json({message: "Review couldn't be found"})
+        res.status(401)
+        return res.json({message: "You do not have permission to edit this review"})
     }
 
     const {review, stars} = req.body
@@ -157,8 +157,8 @@ router.delete('/:reviewId', requireAuth, async(req,res) => {
     }
 
     if (req.user.id !== reviewToDelete.userId) {
-        res.status(404)
-        return res.json({message: "Review couldn't be found" })
+        res.status(401)
+        return res.json({message: "You do not have permission to delete this review" })
     }
 
     await reviewToDelete.destroy()
