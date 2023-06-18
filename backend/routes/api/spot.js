@@ -44,7 +44,10 @@ const validateSpot = [
     .withMessage('Longitude is not valid'),
     check('name')
     .exists({checkFalsy: true})
-    .withMessage('please provide a name for the location'),
+    .withMessage('please provide a name for the location')
+    .custom((async (value) => {
+        if(value.length > 50) throw new Error('Name must not exceed 50 characters')
+    })),
     check('description')
     .exists({checkFalsy: true})
     .withMessage('Description is required'),
@@ -82,7 +85,10 @@ const validateSpotEditOnly = [
     .withMessage('Longitude is not valid'),
     check('name')
     .exists({checkFalsy: true})
-    .withMessage('please provide a name for the location'),
+    .withMessage('please provide a name for the location')
+    .custom((async (value) => {
+        if(value.length > 50) throw new Error('Name must not exceed 50 characters')
+    })),
     check('description')
     .exists({checkFalsy: true})
     .withMessage('Description is required'),
@@ -441,10 +447,10 @@ router.get('/:spotId/bookings', requireAuth, async(req,res) => {
         }
     })
 
-    if(allSpotsForSpotId.length === 0) {
-        res.status(404)
-        return res.json({message: "Spot couldn't be found"})
-    }
+    // if(allSpotsForSpotId.length === 0) {
+    //     res.status(404)
+    //     return res.json({message: "This spot currently has no bookings"})
+    // }
 
     const bookingPOJO = await Promise.all(allSpotsForSpotId.map(async (booking) => {
         // if the spot belongs to you
