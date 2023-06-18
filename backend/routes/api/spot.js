@@ -447,10 +447,13 @@ router.get('/:spotId/bookings', requireAuth, async(req,res) => {
         }
     })
 
-    // if(allSpotsForSpotId.length === 0) {
-    //     res.status(404)
-    //     return res.json({message: "This spot currently has no bookings"})
-    // }
+    if(allSpotsForSpotId.length === 0) {
+        const doesSpotExist = await Spot.findByPk(req.params.spotId)
+        if(!doesSpotExist) {
+        res.status(404)
+        return res.json({message: "Spot couldn't be found"})
+        }
+    }
 
     const bookingPOJO = await Promise.all(allSpotsForSpotId.map(async (booking) => {
         // if the spot belongs to you
