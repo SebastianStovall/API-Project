@@ -1,0 +1,28 @@
+#spots-list {
+    display: flex;
+    flex-wrap: wrap;
+    border: 3px solid black;
+}
+
+#single-spot-main-container {
+    background-color: aqua;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid red;
+    width: fit-content;
+}
+
+#single-spot-all-details-container {
+    border: 1px solid green;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#city-price-details {
+    border: 1px solid brown;
+}
+
+/* .spot-preview-img {
+
+} */
