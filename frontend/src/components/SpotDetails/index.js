@@ -2,24 +2,23 @@ import { useParams } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect } from "react"
 import { getSpotById } from "../../store/spots"
+import { Reviews } from "./Reviews"
 import "./SpotDetails.css"
 
 export const SpotDetails = () => {
     const dispatch = useDispatch()
     const { spotId } = useParams()
     const targetSpot = useSelector((state) => state.spots.spotDetails)
-
-    const filteredSpotImages = targetSpot?.SpotImages?.filter((img) => img.preview === false) || [] // give all images beside the preview image
-
-    // let previewImg = null
-    // if( Object.values(targetSpot).length !== 0 ) {
-    //     const findPreviewImg = targetSpot.SpotImages.filter((img) => img.preview === true)
-    //     if(findPreviewImg.length > 0) previewImg = findPreviewImg[0].url // will always be at index 0 since theres only one preview image
-    // }
+    const getCurrentUser = useSelector((state) => state.session.user);
+    // console.log("CURRENT USER INFO", getCurrentUser)
 
     useEffect(() => {
         dispatch(getSpotById(spotId))
     }, [spotId, dispatch])
+
+
+    if( Object.values(targetSpot).length === 0 ) return null // if first render, return null
+    const filteredSpotImages = targetSpot?.SpotImages?.filter((img) => img.preview === false) || [] // give all images beside the preview image
 
     return (
         <div id="main-spotDetails-container">
@@ -38,11 +37,24 @@ export const SpotDetails = () => {
                 </div>
             </div>
             <div id="description-reserve-container">
+                <div className="description-container">
+                    <h3>Hosted By {targetSpot.Owner.firstName} {targetSpot.Owner.lastName}</h3>
+                    <p>{targetSpot.description}</p>
+                </div>
+                <div className="reserve-container">
+                    <div id="reserve-info-box">
+                        <div>${targetSpot.price}night</div>
+                        <div>★{targetSpot.avgStarRating} · {targetSpot.numReviews} reviews</div>
+                    </div>
+                    <button className="reserve-button">Reserve</button>
+                </div>
             </div>
             <div id="review-container">
-                <div className="review-title-container"></div>
+                <div>★{targetSpot.avgStarRating} · {targetSpot.numReviews} reviews</div>
+                {getCurrentUser && <button className="create-review">Post Your Review</button>}
+                {/* TODO --> add in functionality to determine if user is owner of spot (CANT POST REVIEW) OR user hasnt yet to post a review */}
                 <div className="review-comment-section-container">
-                    {/* < put comment component mapping here  > */}
+                    <Reviews spotId={spotId}/>
                 </div>
             </div>
         </div>

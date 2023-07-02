@@ -497,10 +497,10 @@ router.get('/:spotId', async(req,res) => {
             'price',
             'createdAt',
             'updatedAt',
-            [sequelize.fn('AVG', sequelize.col('stars')), 'avgStarRating']
+            [sequelize.fn('ROUND', sequelize.fn('AVG', sequelize.col('Reviews.stars')), 1), 'avgStarRating'] //might cause issues since this was changed
         ],
         include: [{model: Review, attributes: []}, {model: User, attributes: ['id', 'firstName', 'lastName']}],
-        group: ['Spot.id', 'Reviews.id', 'User.id']
+        group: ['Spot.id', 'User.id'] // might need to put 'Review.id' in the middle of them, will need to test once pushed
     })
 
     if(!spot) {

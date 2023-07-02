@@ -1,6 +1,13 @@
 
-/* spot images container ------ */
+#main-spotDetails-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 35px;
+    padding-right: 35px;
+}
 
+
+/* spot images container ------ */
 #spotImages-container {
     display: flex;
     /* border: 3px solid black; */
@@ -47,5 +54,34 @@
     object-fit: cover;
     object-position: center;
 }
-
 /* spot images container ------ */
+
+/* description-reserve-area */
+#description-reserve-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    border: 3px solid red;
+}
+
+
+.reserve-container {
+    border: 5px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+#reserve-info-box {
+    display: flex;
+}
+/* description-reserve-area */
+
+#review-container {
+    border: 3px solid green;
+}
+
+.single-review {
+    border: 1px solid red;
+}
