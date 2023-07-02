@@ -1,0 +1,10 @@
+.spot-link {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.spot-link:hover {
+    text-decoration: none;
+    color: none;
+}

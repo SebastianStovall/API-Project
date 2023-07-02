@@ -1,0 +1,47 @@
+#spots-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 40px;
+}
+
+#single-spot-main-container {
+    background-color: none;
+    display: flex;
+    flex-direction: column;
+    border: 3px solid black;
+}
+
+#single-spot-all-details-container {
+    border: 1px solid green;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#city-price-details {
+    border: 1px solid brown;
+}
+
+.spot-preview-img {
+    width: 100%;
+    height: 300px;
+}
+
+
+@media (max-width: 1200px) {
+    #spots-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 800px) {
+    #spots-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    #spots-list {
+        grid-template-columns: 1fr;
+    }
+}
