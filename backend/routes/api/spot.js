@@ -32,6 +32,16 @@ const validateSpot = [
     .withMessage('State is required')
     .custom(async (value) => {
         if(value.length !== 2 || value !== value.toUpperCase()) throw new Error('State must be in the format of two uppercase letters (e.g., NY)')
+    })
+    .custom(async (value) => {
+        const VALID_STATES = [
+            "AL", "AK", "AZ", "AR", "CA", "CZ", "CO", "CT", "DE", "DC", "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA", "KS", // ADDED STATE ARRAY VALIDATION
+            "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH",
+            "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WI", "WY"
+        ];
+        if(!VALID_STATES.includes(value)) {
+            throw new Error('Invalid State')
+        }
     }),
     check('country')
     .exists({checkFalsy: true})
@@ -73,6 +83,16 @@ const validateSpotEditOnly = [
     .withMessage('State is required')
     .custom(async (value) => {
         if(value.length !== 2 || value !== value.toUpperCase()) throw new Error('State must be in the format of two uppercase letters (e.g., NY)')
+    })
+    .custom(async (value) => {
+        const VALID_STATES = [
+            "AL", "AK", "AZ", "AR", "CA", "CZ", "CO", "CT", "DE", "DC", "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA", "KS", // ADDED STATE ARRAY VALIDATION
+            "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH",
+            "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WI", "WY"
+        ];
+        if(!VALID_STATES.includes(value)) {
+            throw new Error('Invalid State')
+        }
     }),
     check('country')
     .exists({checkFalsy: true})
