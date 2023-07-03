@@ -15,6 +15,7 @@ function Navigation({ isLoaded }) {
     if (sessionUser) {
         sessionLinks = (
         <li>
+            <NavLink exact to="/spots/new">Create a Spot</NavLink>
             <ProfileButton user={sessionUser} />
         </li>
         );

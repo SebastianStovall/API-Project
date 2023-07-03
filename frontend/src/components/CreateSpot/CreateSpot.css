@@ -1,0 +1,66 @@
+#create-spot-form-container {
+    display: flex;
+    justify-content: center;
+}
+
+.test-form {
+    display: flex;
+    flex-direction: column;
+    /* border: 2px solid red; */
+    width: 450px;
+    margin-bottom: 12px;
+}
+
+#city-state-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 450px;
+    /* border: 1px solid red; */
+}
+
+.cityContainer input {
+    width: 250px;
+}
+
+#describe-your-place-container {
+    width: 450px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    margin: 20px 0px;
+    padding-bottom: 20px;
+}
+
+.desc-textarea {
+    width: 450px;
+    height: 130px;
+}
+
+#create-title-container {
+    width: 450px;
+    border-bottom: 1px solid black;
+    padding-bottom: 20px;
+}
+
+.title-form-component > input {
+    width: 450px;
+}
+
+#price-container {
+    padding-bottom: 20px;
+    border-bottom: 1px solid black;
+    width: 450px;
+}
+
+#spot-image-container {
+    width: 450px;
+    border-bottom: 1px solid black;
+}
+
+#spot-image-container input {
+    width: 450px;
+}
+
+.spot-image-input {
+    padding-bottom: 20px;
+}

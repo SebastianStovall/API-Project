@@ -1,7 +1,9 @@
+import { csrfFetch } from "./csrf"
+
 //CRUD
 const LOAD_SPOTS = '/spots/LOAD_SPOTS'
 const RETRIEVE_SPOT = '/spots/RETRIEVE_SPOT'
-const LOAD_SPOT_REVIEWS = '/spots/LOAD_SPOT_REVIEWS'
+const UPLOAD_SPOT = '/spots/UPLOAD_SPOT'
 
 
 //ACTION CREATORS
@@ -15,17 +17,16 @@ export const getSingleSpot = (spot) => ({
     spot
 })
 
-export const loadSpotReviews = (reviews) => ({
-    type: LOAD_SPOT_REVIEWS,
-    reviews
+export const uploadSpot = (spotInfo) => ({
+    type: UPLOAD_SPOT,
+    spotInfo
 })
-
 
 //THUNKS
 
 //LOAD_SPOTS
 export const getSpots = () => async (dispatch) => {
-    const response = await fetch('/api/spots/')
+    const response = await csrfFetch('/api/spots/')
 
     if(response.ok) {
         const spots = await response.json();
@@ -36,7 +37,7 @@ export const getSpots = () => async (dispatch) => {
 
 //RETRIEVE_SPOT
 export const getSpotById = (spotId) => async (dispatch) => {
-    const response = await fetch(`/api/spots/${spotId}`)
+    const response = await csrfFetch(`/api/spots/${spotId}`)
 
     if(response.ok) {
         const spotDetails = await response.json();
@@ -44,21 +45,27 @@ export const getSpotById = (spotId) => async (dispatch) => {
     }
 }
 
-//LOAD_SPOT_REVIEWS
-export const getSpotReviews = (spotId) => async (dispatch) => {
-    const response = await fetch(`/api/spots/${spotId}/reviews`)
+// UPLOAD_SPOT
+export const createSpot = (formData) => async (dispatch) => {
+    const response = await csrfFetch('/api/spots', {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(formData)
+    })
 
     if(response.ok) {
-        const reviews = await response.json();
-        dispatch(loadSpotReviews(reviews))
+        const spotInfo = await response.json()
+        dispatch(uploadSpot(spotInfo))
+        return spotInfo.id
     } else {
-        dispatch(loadSpotReviews({Reviews: []}))
+        const errors = await response.json()
+        return errors
     }
 }
 
 
 //REDUCER
-const initialState = { spots: {}, spotDetails: {}, reviews: {} }
+const initialState = { spots: {}, spotDetails: {} } // spots key = GET /api/spots (get all spots) ---> can overwrite this key for POST, PUT, and DELETE        spotDetails key = GET /api/spots/:spotId (get details of a spot by id)
 
 const spotsReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -70,14 +77,8 @@ const spotsReducer = (state = initialState, action) => {
             return newState
         case RETRIEVE_SPOT:
             return {...state, spotDetails: action.spot }
-        case LOAD_SPOT_REVIEWS:
-            const reviewsForSpot = {}
-            if(action.reviews.Reviews.length > 0) {
-                action.reviews.Reviews.forEach((review) => {
-                    return reviewsForSpot[review.id] = review;
-                })
-            }
-            return {...state, reviews: reviewsForSpot}
+        case UPLOAD_SPOT:
+            return {...state, spots: {...state.spots, [action.spotInfo.id]: action.spotInfo} }
         default:
             return state
     }
@@ -85,3 +86,13 @@ const spotsReducer = (state = initialState, action) => {
 
 
 export default spotsReducer
+
+
+
+
+export const displayAsFloat = (avgRating) => {
+    if(Number.isInteger(avgRating)) { // determine if avgRating is a whole number
+        return avgRating.toFixed(1);
+    }
+    return avgRating
+}
