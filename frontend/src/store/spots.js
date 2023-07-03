@@ -58,7 +58,7 @@ export const getSpotReviews = (spotId) => async (dispatch) => {
 
 
 //REDUCER
-const initialState = { spots: {}, spotDetails: {}, reviews: {} }
+const initialState = { spots: {}, spotDetails: {}, reviews: {} } // spots slice keeps track of all spots, spotDetails keeps track of a single spot's details, reviews keeps track of all reviews tied to that spot
 
 const spotsReducer = (state = initialState, action) => {
     switch (action.type) {
