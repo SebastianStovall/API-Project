@@ -20,7 +20,12 @@ export const loadSpotReviews = (reviews) => ({
 
 
 //THUNKS
-export const getUserReviews = () => async (dispatch) => {
+export const getUserReviews = () => async (dispatch, getState) => {
+
+    const currentState = getState();
+    const userInfo = currentState.session
+    if (userInfo.user === null) return null
+
     const response = await csrfFetch('/api/reviews/current')
 
     if(response.ok) {
