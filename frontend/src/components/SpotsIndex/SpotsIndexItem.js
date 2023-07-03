@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import "./SpotsIndexItem.css"
+import { displayAsFloat } from "../../store/spots"
 
 export const SpotsIndexItem = ({spot}) => {
 
@@ -13,7 +14,8 @@ export const SpotsIndexItem = ({spot}) => {
                     <p>{`${spot.city}, ${spot.state}`}</p>
                     <p>{`$${spot.price}night`}</p>
                 </div>
-                <p>{spot.avgRating ? `★ ${spot.avgRating}` : "New"}</p>
+                <p>{spot.avgRating ? `★${displayAsFloat(spot.avgRating)}` : "New"}</p>
+                {/* if theres a truthy value for avgRating in database, display it as a floating decimal if whole number, otherwise, if no value exists, render New */}
             </div>
             </Link>
         </div>

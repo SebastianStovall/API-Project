@@ -85,3 +85,13 @@ const spotsReducer = (state = initialState, action) => {
 
 
 export default spotsReducer
+
+
+
+
+export const displayAsFloat = (avgRating) => {
+    if(Number.isInteger(avgRating)) { // determine if avgRating is a whole number
+        return avgRating.toFixed(1);
+    }
+    return avgRating
+}
