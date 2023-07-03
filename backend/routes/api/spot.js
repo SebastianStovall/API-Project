@@ -429,12 +429,12 @@ router.get('/:spotId/reviews', async(req, res, next) => {
     }))
 
 
-    if(reviewsForSpot.length === 0) {
-        res.status(404)
-        return res.json({message: "Spot couldn't be found"})
-    } else {
-        return res.json({Reviews: reviewPOJO})
-    }
+    // if(reviewsForSpot.length === 0) {
+    //     res.status(404)
+    //     return res.json({message: "Spot couldn't be found"})
+    // } else {
+        return res.json({Reviews: reviewPOJO}) // this was changed because it was throwing an error if no reviews were found (doesnt necessarily mean spot doesnt exist)
+    // }
 
 
 })

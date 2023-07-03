@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
-import { getSpotReviews } from "../../store/spots"
+import { getSpotReviews } from "../../store/reviews"
 import { useParams } from "react-router-dom"
 
 export const Reviews = ({user, spotOwner}) => {
     const dispatch = useDispatch()
-    const reviews = useSelector(state => Object.values(state.spots.reviews))
+    const reviews = useSelector(state => Object.values(state.reviews.reviews))
     const { spotId } = useParams()
 
     useEffect(() => {

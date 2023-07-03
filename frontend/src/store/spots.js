@@ -1,7 +1,8 @@
+import { csrfFetch } from "./csrf"
+
 //CRUD
 const LOAD_SPOTS = '/spots/LOAD_SPOTS'
 const RETRIEVE_SPOT = '/spots/RETRIEVE_SPOT'
-const LOAD_SPOT_REVIEWS = '/spots/LOAD_SPOT_REVIEWS'
 
 
 //ACTION CREATORS
@@ -15,17 +16,11 @@ export const getSingleSpot = (spot) => ({
     spot
 })
 
-export const loadSpotReviews = (reviews) => ({
-    type: LOAD_SPOT_REVIEWS,
-    reviews
-})
-
-
 //THUNKS
 
 //LOAD_SPOTS
 export const getSpots = () => async (dispatch) => {
-    const response = await fetch('/api/spots/')
+    const response = await csrfFetch('/api/spots/')
 
     if(response.ok) {
         const spots = await response.json();
@@ -36,7 +31,7 @@ export const getSpots = () => async (dispatch) => {
 
 //RETRIEVE_SPOT
 export const getSpotById = (spotId) => async (dispatch) => {
-    const response = await fetch(`/api/spots/${spotId}`)
+    const response = await csrfFetch(`/api/spots/${spotId}`)
 
     if(response.ok) {
         const spotDetails = await response.json();
@@ -44,21 +39,9 @@ export const getSpotById = (spotId) => async (dispatch) => {
     }
 }
 
-//LOAD_SPOT_REVIEWS
-export const getSpotReviews = (spotId) => async (dispatch) => {
-    const response = await fetch(`/api/spots/${spotId}/reviews`)
-
-    if(response.ok) {
-        const reviews = await response.json();
-        dispatch(loadSpotReviews(reviews))
-    } else {
-        dispatch(loadSpotReviews({Reviews: []}))
-    }
-}
-
 
 //REDUCER
-const initialState = { spots: {}, spotDetails: {}, reviews: {} } // spots slice keeps track of all spots, spotDetails keeps track of a single spot's details, reviews keeps track of all reviews tied to that spot
+const initialState = { spots: {}, spotDetails: {} } // spots key = GET /api/spots (get all spots) ---> can overwrite this key for POST, PUT, and DELETE        spotDetails key = GET /api/spots/:spotId (get details of a spot by id)
 
 const spotsReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -70,14 +53,6 @@ const spotsReducer = (state = initialState, action) => {
             return newState
         case RETRIEVE_SPOT:
             return {...state, spotDetails: action.spot }
-        case LOAD_SPOT_REVIEWS:
-            const reviewsForSpot = {}
-            if(action.reviews.Reviews.length > 0) {
-                action.reviews.Reviews.forEach((review) => {
-                    return reviewsForSpot[review.id] = review;
-                })
-            }
-            return {...state, reviews: reviewsForSpot}
         default:
             return state
     }
