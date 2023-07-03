@@ -1,0 +1,87 @@
+
+#main-spotDetails-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+
+/* spot images container ------ */
+#spotImages-container {
+    display: flex;
+    /* border: 3px solid black; */
+    column-gap: 5px;
+    /* height: 600px; */
+}
+
+.main-img {
+    /* background-color: green; */
+    /* border: 2px solid purple; */
+    flex-basis: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border: 2px solid black;
+}
+
+#normal-spotImgs-container {
+    flex-basis: 50%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 5px;
+    overflow: hidden;
+    align-items: stretch;
+}
+
+.normal-spotImgs {
+    margin: 0;
+    padding: 0;
+    border: 2px solid black;
+}
+
+.normal-spotImgs img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+/* spot images container ------ */
+
+/* description-reserve-area */
+#description-reserve-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    border: 3px solid red;
+}
+
+
+.reserve-container {
+    border: 5px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+#reserve-info-box {
+    display: flex;
+}
+/* description-reserve-area */
+
+#review-container {
+    border: 3px solid green;
+}
+
+.single-review {
+    border: 1px solid red;
+}
