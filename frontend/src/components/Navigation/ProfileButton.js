@@ -1,10 +1,12 @@
 // frontend/src/components/Navigation/ProfileButton.js
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
+import { NavLink, useHistory } from "react-router-dom";
 import * as sessionActions from '../../store/session';
 import './ProfileButton.css'
 
 function ProfileButton({ user }) {
+    const history = useHistory()
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false); // dropdown initially set to false
     const ulRef = useRef(); // this hook is to capture user click on DOM
@@ -32,6 +34,7 @@ function ProfileButton({ user }) {
     const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
+    return history.push("/") // force user to home page on logout
     };
 
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
@@ -45,9 +48,8 @@ function ProfileButton({ user }) {
                 <li>{user.username}</li>
                 <li>{user.firstName} {user.lastName}</li>
                 <li>{user.email}</li>
-                <li>
-                <button onClick={logout}>Log Out</button>
-                </li>
+                <li> <NavLink exact to="/spots/current">Manage Spots</NavLink> </li>
+                <li> <button onClick={logout}>Log Out</button> </li>
             </ul>
         </>
     );

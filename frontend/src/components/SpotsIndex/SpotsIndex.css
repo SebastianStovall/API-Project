@@ -1,3 +1,7 @@
+#landing-page-main-spot-container {
+    padding: 0px 80px;
+}
+
 #spots-list {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

@@ -5,6 +5,7 @@ const LOAD_SPOTS = '/spots/LOAD_SPOTS'
 const RETRIEVE_SPOT = '/spots/RETRIEVE_SPOT'
 const UPLOAD_SPOT = '/spots/UPLOAD_SPOT'
 const UPLOAD_SPOT_IMAGE = '/spots/UPLOAD_SPOT_IMAGE'
+const RETRIEVE_ALL_USER_SPOTS = '/spots/RETRIEVE_ALL_USER_SPOTS'
 
 
 //ACTION CREATORS
@@ -26,6 +27,11 @@ export const uploadSpot = (spotInfo) => ({
 export const uploadSpotImage = (spotImage) => ({
     type: UPLOAD_SPOT_IMAGE,
     spotImage
+})
+
+export const retrieveUserSpots = (spots) => ({
+    type: RETRIEVE_ALL_USER_SPOTS,
+    spots
 })
 
 //THUNKS
@@ -97,9 +103,19 @@ export const createSpotImage = (spotId, isPreview, url) => async (dispatch) => {
 
 }
 
+// RETREIVE_ALL_USER_SPOTS
+export const getAllUserSpots = () => async (dispatch) => {
+    const response = await csrfFetch('/api/spots/current')
+
+    if(response.ok) {
+        const spots = await response.json()
+        dispatch(retrieveUserSpots(spots))
+    }
+}
+
 
 //REDUCER
-const initialState = { spots: {}, spotDetails: {} } // spots key = GET /api/spots (get all spots) ---> can overwrite this key for POST, PUT, and DELETE        spotDetails key = GET /api/spots/:spotId (get details of a spot by id)
+const initialState = { spots: {}, spotDetails: {} } // spots key = GET /api/spots (get all spots) ---> can overwrite this key for POST, PUT, and DELETE AND FOR USER SPOTS       spotDetails key = GET /api/spots/:spotId (get details of a spot by id)
 
 const spotsReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -115,6 +131,12 @@ const spotsReducer = (state = initialState, action) => {
             return {...state, spots: {...state.spots, [action.spotInfo.id]: action.spotInfo} }
         case UPLOAD_SPOT_IMAGE:
             return {...state}
+        case RETRIEVE_ALL_USER_SPOTS:
+            const userSpotsState = {...state, spots: {}}
+            action.spots.Spots.forEach((spot) => {
+                return userSpotsState.spots[spot.id] = spot
+            })
+            return userSpotsState
         default:
             return state
     }
