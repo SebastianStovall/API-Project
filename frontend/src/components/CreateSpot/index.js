@@ -2,10 +2,13 @@ import './CreateSpot.css'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createSpot } from '../../store/spots'
+import { createSpotImage } from '../../store/spots'
+import { useHistory } from 'react-router-dom'
 
 export const CreateSpot = () => {
 
     const dispatch = useDispatch()
+    const history = useHistory()
 
     const [address, setAddress] = useState("")
     const [city, setCity] = useState("")
@@ -32,30 +35,20 @@ export const CreateSpot = () => {
     useEffect(() => {
     }, [address, city, state, country, name, description, price])
 
+    const isValidUrl = (url) => {
+        return ( url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".jpeg") )
+    }
+
     // deterine if all inputs excluding any image stuff is correct
     // if spot is good to go, dispatch the action (REMEMBER TO HARD CODE VALUES FOR LAT AND LNG)  --->  (IF SPOT NOT GOOD TO GO, render the errors required)
     // the thunk will return the new spot id
     // with the spot id, create 5 conditional checks to determine which images you'll need to create for the new spot (1 input will be preview image, other 4 will NOT be preview images)
     // HAVE A FUNCTION THAT DETERMINES IF THE INPUTS FOR IMAGES ARE A VALID URL
     // if( value !== null && isValidUrl(value) && ( IF DOING EDIT ---> look up that spot's details to see if it already has 5 images ) ) ---> dispatch(createSpotImage(newspotId, previewImgBoolean, url))
-    // once images are added, return user to home page
+    // once images are added, return user to spot detail page
 
     const handleSubmit = async (e) => {
-        // prevent submit
         e.preventDefault()
-        // console.log(address)
-        // console.log(city)
-        // console.log(state)
-        // console.log(country)
-        // console.log(name)
-        // console.log(description)
-        // console.log(price)
-
-        // console.log(previewImg)
-        // console.log(imageUrlOne)
-        // console.log(imageUrlTwo)
-        // console.log(imageUrlThree)
-        // console.log(imageUrlFour)
 
         const spot = {
             address,
@@ -69,14 +62,26 @@ export const CreateSpot = () => {
             price: Number(price)
         }
 
-        const response = await dispatch(createSpot(spot))
+        const response = await dispatch(createSpot(spot)) // attempt to create spot
 
         if (response.errors) {
-            const errors = response.errors
+            const errors = response.errors // main backend errors
+
             if(previewImg === "") errors.previewImg = 'Preview image is required'
+            if( !(isValidUrl(previewImg)) ) errors.previewImgInvalid = "Image URL must end in .png, .jpg, or .jpeg"
+            if( !(isValidUrl(imageUrlOne)) && imageUrlOne !== "" ) errors.imageUrlOne = "Image URL must end in .png, .jpg, or .jpeg"
+            if( !(isValidUrl(imageUrlTwo)) && imageUrlTwo !== "" ) errors.imageUrlTwo = "Image URL must end in .png, .jpg, or .jpeg"
+            if( !(isValidUrl(imageUrlThree)) && imageUrlThree !== "" ) errors.imageUrlThree = "Image URL must end in .png, .jpg, or .jpeg"
+            if( !(isValidUrl(imageUrlFour)) && imageUrlFour !== "" ) errors.imageUrlFour = "Image URL must end in .png, .jpg, or .jpeg"
             setFormErrors(errors)
-        } else {
-            if(imageUrlOne !== "") console.log(true)
+        } else { // response = spot id
+            dispatch(createSpotImage(response, true, previewImg))
+            if(isValidUrl(imageUrlOne)) dispatch(createSpotImage(response, false, imageUrlOne))
+            if(isValidUrl(imageUrlTwo)) dispatch(createSpotImage(response, false, imageUrlTwo))
+            if(isValidUrl(imageUrlThree)) dispatch(createSpotImage(response, false, imageUrlThree))
+            if(isValidUrl(imageUrlFour)) dispatch(createSpotImage(response, false, imageUrlFour))
+
+            history.push(`/spots/${response}`) // push to new spot page
         }
 
 
@@ -216,6 +221,7 @@ export const CreateSpot = () => {
                             placeholder='Preview Image Url'
                         />
                         {formErrors && <span className='form-errors'>{formErrors.previewImg}</span>}
+                        {formErrors && <span className='form-errors'>{formErrors.previewImgInvalid}</span>}
                     </div>
                     <div className='spot-image-input'>
                         <input
@@ -223,6 +229,7 @@ export const CreateSpot = () => {
                             onChange={(e) => setImageUrlOne(e.target.value)}
                             placeholder='Image Url'
                         />
+                        {formErrors && <span className='form-errors'>{formErrors.imageUrlOne}</span>}
                     </div>
                     <div className='spot-image-input'>
                         <input
@@ -230,6 +237,7 @@ export const CreateSpot = () => {
                             onChange={(e) => setImageUrlTwo(e.target.value)}
                             placeholder='Image Url'
                         />
+                        {formErrors && <span className='form-errors'>{formErrors.imageUrlTwo}</span>}
                     </div>
                     <div className='spot-image-input'>
                         <input
@@ -237,6 +245,7 @@ export const CreateSpot = () => {
                             onChange={(e) => setImageUrlThree(e.target.value)}
                             placeholder='Image Url'
                         />
+                        {formErrors && <span className='form-errors'>{formErrors.imageUrlThree}</span>}
                     </div>
                     <div className='spot-image-input'>
                         <input
@@ -244,14 +253,11 @@ export const CreateSpot = () => {
                             onChange={(e) => setImageUrlFour(e.target.value)}
                             placeholder='Image Url'
                         />
+                        {formErrors && <span className='form-errors'>{formErrors.imageUrlFour}</span>}
                     </div>
                 </div>
 
-                <button
-                    type='submit'
-                >
-                    Create Spot
-                </button>
+                <button type='submit'>Create Spot</button>
 
             </form>
         </div>

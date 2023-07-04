@@ -4,6 +4,7 @@ import { csrfFetch } from "./csrf"
 const LOAD_SPOTS = '/spots/LOAD_SPOTS'
 const RETRIEVE_SPOT = '/spots/RETRIEVE_SPOT'
 const UPLOAD_SPOT = '/spots/UPLOAD_SPOT'
+const UPLOAD_SPOT_IMAGE = '/spots/UPLOAD_SPOT_IMAGE'
 
 
 //ACTION CREATORS
@@ -20,6 +21,11 @@ export const getSingleSpot = (spot) => ({
 export const uploadSpot = (spotInfo) => ({
     type: UPLOAD_SPOT,
     spotInfo
+})
+
+export const uploadSpotImage = (spotImage) => ({
+    type: UPLOAD_SPOT_IMAGE,
+    spotImage
 })
 
 //THUNKS
@@ -68,6 +74,29 @@ export const createSpot = (formData) => async (dispatch) => {
     }
 }
 
+//UPLOAD_SPOT_IMAGE
+export const createSpotImage = (spotId, isPreview, url) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            url,
+            preview: isPreview
+        })
+
+    })
+
+    if(response.ok) {
+        const spotImage = await response.json()
+        return spotImage
+        // dispatch(uploadSpotImage(spotImage))
+    } else {
+        const errors = await response.json()
+        return errors
+    }
+
+}
+
 
 //REDUCER
 const initialState = { spots: {}, spotDetails: {} } // spots key = GET /api/spots (get all spots) ---> can overwrite this key for POST, PUT, and DELETE        spotDetails key = GET /api/spots/:spotId (get details of a spot by id)
@@ -84,6 +113,8 @@ const spotsReducer = (state = initialState, action) => {
             return {...state, spotDetails: action.spot }
         case UPLOAD_SPOT:
             return {...state, spots: {...state.spots, [action.spotInfo.id]: action.spotInfo} }
+        case UPLOAD_SPOT_IMAGE:
+            return {...state}
         default:
             return state
     }
