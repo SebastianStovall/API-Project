@@ -47,19 +47,24 @@ export const getSpotById = (spotId) => async (dispatch) => {
 
 // UPLOAD_SPOT
 export const createSpot = (formData) => async (dispatch) => {
-    const response = await csrfFetch('/api/spots', {
-        method: "POST",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(formData)
-    })
 
-    if(response.ok) {
-        const spotInfo = await response.json()
-        dispatch(uploadSpot(spotInfo))
-        return spotInfo.id
-    } else {
-        const errors = await response.json()
-        return errors
+    try {
+        const response = await csrfFetch('/api/spots', {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData)
+        })
+
+        if(response.ok) {
+            const spotInfo = await response.json()
+            dispatch(uploadSpot(spotInfo))
+            return spotInfo.id
+        } else {
+            const errors = await response.json()
+            return errors
+        }
+    } catch(err) {
+        return await err.json()
     }
 }
 

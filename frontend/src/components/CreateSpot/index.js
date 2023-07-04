@@ -1,6 +1,7 @@
 import './CreateSpot.css'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { createSpot } from '../../store/spots'
 
 export const CreateSpot = () => {
 
@@ -20,6 +21,8 @@ export const CreateSpot = () => {
     const [imageUrlThree, setImageUrlThree] = useState("")
     const [imageUrlFour, setImageUrlFour] = useState("")
 
+    const [formErrors, setFormErrors] = useState({})
+
     const VALID_STATES = [
         "AL", "AK", "AZ", "AR", "CA", "CZ", "CO", "CT", "DE", "DC", "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA", "KS",
         "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH",
@@ -37,7 +40,7 @@ export const CreateSpot = () => {
     // if( value !== null && isValidUrl(value) && ( IF DOING EDIT ---> look up that spot's details to see if it already has 5 images ) ) ---> dispatch(createSpotImage(newspotId, previewImgBoolean, url))
     // once images are added, return user to home page
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         // prevent submit
         e.preventDefault()
         // console.log(address)
@@ -53,6 +56,28 @@ export const CreateSpot = () => {
         // console.log(imageUrlTwo)
         // console.log(imageUrlThree)
         // console.log(imageUrlFour)
+
+        const spot = {
+            address,
+            city,
+            state,
+            country,
+            lat: 50.00, // hard code these since i dont have an api to dynamically get these
+            lng: 50.00, // hard code these since i dont have an api to dynamically get these
+            name,
+            description,
+            price: Number(price)
+        }
+
+        const response = await dispatch(createSpot(spot))
+
+        if (response.errors) {
+            const errors = response.errors
+            if(previewImg === "") errors.previewImg = 'Preview image is required'
+            setFormErrors(errors)
+        } else {
+            if(imageUrlOne !== "") console.log(true)
+        }
 
 
         // clear form values
@@ -87,6 +112,7 @@ export const CreateSpot = () => {
                         onChange={(e) => setCountry(e.target.value)}
                         placeholder='Country'
                     />
+                    {formErrors && <span className='form-errors'>{formErrors.country}</span>}
                 </div>
 
                 <div className='test-form'>
@@ -98,6 +124,7 @@ export const CreateSpot = () => {
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder='Address'
                     />
+                    {formErrors && <span className='form-errors'>{formErrors.address}</span>}
                 </div>
 
                 <div id='city-state-container'>
@@ -110,6 +137,7 @@ export const CreateSpot = () => {
                             onChange={(e) => setCity(e.target.value)}
                             placeholder='City'
                         />
+                        {formErrors && <span className='form-errors'>{formErrors.city}</span>}
                     </div>
                     <div className='stateContainer'>
                         <label htmlFor='state'>State</label>
@@ -125,6 +153,7 @@ export const CreateSpot = () => {
                             </option>
                         ))}
                         </select>
+                        {formErrors && <span className='form-errors'>{formErrors.state}</span>}
                     </div>
                 </div>
 
@@ -140,6 +169,7 @@ export const CreateSpot = () => {
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder='Please write at least 30 characters'
                         />
+                        {formErrors && <span className='form-errors'>{formErrors.description}</span>}
                     </div>
                 </div>
 
@@ -154,6 +184,7 @@ export const CreateSpot = () => {
                             onChange={(e) => setName(e.target.value)}
                             placeholder='Name of your spot'
                         />
+                        {formErrors && <span className='form-errors'>{formErrors.name}</span>}
                     </div>
                 </div>
 
@@ -169,6 +200,7 @@ export const CreateSpot = () => {
                             onChange={(e) => setPrice(e.target.value)}
                             placeholder='Price per night (USD)'
                         />
+                        {formErrors && <span className='form-errors'>{formErrors.price}</span>}
                     </div>
                 </div>
 
@@ -183,6 +215,7 @@ export const CreateSpot = () => {
                             onChange={(e) => setPreviewImg(e.target.value)}
                             placeholder='Preview Image Url'
                         />
+                        {formErrors && <span className='form-errors'>{formErrors.previewImg}</span>}
                     </div>
                     <div className='spot-image-input'>
                         <input
