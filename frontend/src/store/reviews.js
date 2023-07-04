@@ -3,7 +3,7 @@ import { csrfFetch } from "./csrf"
 // CRUD
 const LOAD_USER_REVIEWS = '/reviews/LOAD_USER_REVIEWS'
 const LOAD_SPOT_REVIEWS = '/spots/LOAD_SPOT_REVIEWS'
-
+const ADD_SPOT_REVIEW = '/spots/ADD_SPOT_REVIEW'
 
 
 //ACTION CREATORS
@@ -15,6 +15,11 @@ export const loadUserReviews = (reviews) => ({
 export const loadSpotReviews = (reviews) => ({
     type: LOAD_SPOT_REVIEWS,
     reviews
+})
+
+export const addSpotReview = (reviewData) => ({
+    type: ADD_SPOT_REVIEW,
+    reviewData
 })
 
 
@@ -44,6 +49,20 @@ export const getSpotReviews = (spotId) => async (dispatch) => {
     }
 }
 
+//POST SPOT REVIEW
+export const postSpotReview = (spotId, reviewInfo) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(reviewInfo)
+    })
+
+    if(response.ok) {
+        const reviewData = await response.json()
+        dispatch(addSpotReview(reviewData))
+    }
+}
+
 
 //REDUCER
 const initialState = { userReviews: {}, reviews: {} } // userReviews slice of state = GET /api/reviews/current (get reviews of current user)    reviews slice of state = GET /api/spots/:spotId/reviews (get reviews by spotId) --> overwrite this key for POST DELETE and PUT
@@ -64,6 +83,8 @@ const reviewsReducer = (state = initialState, action) => {
                 })
             }
             return {...state, reviews: reviewsForSpot}
+        case ADD_SPOT_REVIEW:
+            return {...state, reviews: {...state.reviews, [action.reviewData.id]: action.reviewData}} // think its correct, check back
         default:
             return state
     }

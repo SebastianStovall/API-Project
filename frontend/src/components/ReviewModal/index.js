@@ -3,8 +3,11 @@ import { useState, useEffect } from "react";
 import "./ReviewModal.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // import fontawesome
 import { faStar } from "@fortawesome/free-solid-svg-icons"; // import the specific icon you want and make sure to npm install both and public html has font-awesome css import
+import { postSpotReview } from "../../store/reviews";
+import { useDispatch } from "react-redux";
 
-export const ReviewModal = () => {
+export const ReviewModal = ({spotId}) => {
+    const dispatch = useDispatch()
     const { closeModal } = useModal()
     const [reviewText, setReviewText] = useState("")
     const [rating, setRating] = useState(0)
@@ -20,6 +23,14 @@ export const ReviewModal = () => {
 
     const handleReviewSubmit = () => {
 
+        const reviewInfo = {
+            review: reviewText,
+            stars: rating
+        }
+
+        return dispatch(postSpotReview(spotId, reviewInfo))
+        .then(closeModal)
+        .catch(async (res) => console.log(res));
     }
 
     return (
