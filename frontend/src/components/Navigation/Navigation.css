@@ -38,3 +38,9 @@
     font-size: 18px;
     text-decoration: none;
 }
+
+
+#login-Signup-button-container {
+    display: flex;
+    flex-direction: column;
+}
