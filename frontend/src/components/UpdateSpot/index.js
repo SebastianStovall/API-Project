@@ -69,7 +69,7 @@ export const UpdateSpot = () => {
     return (
         <div id='create-spot-form-container'>
             <form onSubmit={handleSubmit}>
-                <h2>Create a new Spot</h2>
+                <h2>Update your Spot</h2>
                 <h3>Where's your place located?</h3>
                 <p>Guests will only get your exact address once they booked a reservation.</p>
 
@@ -175,7 +175,7 @@ export const UpdateSpot = () => {
                 </div>
 
                 <div id="update-spot-button-container-edit-form">
-                    <button type='submit'>Create Spot</button>
+                    <button type='submit'>Update Spot</button>
                 </div>
 
             </form>

@@ -3,6 +3,8 @@ import { getAllUserSpots } from "../../store/spots"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { displayAsFloat } from "../../store/spots"
+import { DeleteSpotModal } from "../DeleteSpotModal"
+import OpenModalButton from "../OpenModalButton"
 import "./ManageSpots.css"
 
 
@@ -39,7 +41,8 @@ export const ManageSpots = () => {
                     </Link>
                     <div>
                         <button className="user-spots-update-button" onClick={() => history.push(`/spots/${spot.id}/edit`)}>Update</button>
-                        <button className="user-spots-delete-button">Delete</button>
+                        {/* <button className="user-spots-delete-button">Delete</button> */}
+                        <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteSpotModal spotId={spot.id} />} />
                     </div>
                 </div>
                     })}
