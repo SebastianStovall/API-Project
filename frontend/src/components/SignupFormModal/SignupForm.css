@@ -1,0 +1,54 @@
+#signup-modal-main-container {
+    /* overlay my seperate div that covers the main portal view to get round edges */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    /* set main styles of the container */
+    display: flex;
+    justify-content: center;
+    border: 6px solid black;
+    border-radius: 20px;
+    width: 400px;
+    height: fit-content;
+    padding-bottom: 15px;
+}
+
+.sign-up-header-text {
+    text-align: center;
+}
+
+.signup-form-element-container {
+    display: flex;
+    justify-content: center;
+}
+
+.signup-form-input {
+    width: 340px;
+    height: 22px;
+    border: 2px solid black;
+    margin-bottom: 8px;
+}
+
+.signup-form-element-container-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.signup-modal-button {
+    width: 347px;
+    height: 50px;
+    background-color: #FF5A5F;
+    box-shadow: 7px 5px 5px black;
+    color: white
+}
+
+.signup-modal-button:disabled {
+    width: 347px;
+    height: 50px;
+    background-color: lightgray;
+    box-shadow: 7px 5px 5px darkgray;
+    color: white;
+}
