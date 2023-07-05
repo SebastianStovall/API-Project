@@ -4,6 +4,7 @@ import { csrfFetch } from "./csrf"
 const LOAD_USER_REVIEWS = '/reviews/LOAD_USER_REVIEWS'
 const LOAD_SPOT_REVIEWS = '/spots/LOAD_SPOT_REVIEWS'
 const ADD_SPOT_REVIEW = '/spots/ADD_SPOT_REVIEW'
+const REMOVE_SPOT_REVIEW = '/reviews/REMOVE_SPOT_REVIEW'
 
 
 //ACTION CREATORS
@@ -20,6 +21,11 @@ export const loadSpotReviews = (reviews) => ({
 export const addSpotReview = (reviewData) => ({
     type: ADD_SPOT_REVIEW,
     reviewData
+})
+
+export const removeSpotReview = (reviewId) => ({
+    type: REMOVE_SPOT_REVIEW,
+    reviewId
 })
 
 
@@ -63,6 +69,20 @@ export const postSpotReview = (spotId, reviewInfo) => async (dispatch) => {
     }
 }
 
+//REMOVE_SPOT_REVIEW
+export const deleteSpotReview = (reviewId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'}
+    })
+
+    if(response.ok) { // res.json({message: "successfully deleted"})
+        const message = await response.json()
+        dispatch(removeSpotReview(reviewId))
+        return message
+    }
+}
+
 
 //REDUCER
 const initialState = { userReviews: {}, reviews: {} } // userReviews slice of state = GET /api/reviews/current (get reviews of current user)    reviews slice of state = GET /api/spots/:spotId/reviews (get reviews by spotId) --> overwrite this key for POST DELETE and PUT
@@ -85,6 +105,10 @@ const reviewsReducer = (state = initialState, action) => {
             return {...state, reviews: reviewsForSpot}
         case ADD_SPOT_REVIEW:
             return {...state, reviews: {...state.reviews, [action.reviewData.id]: action.reviewData}} // think its correct, check back
+        case REMOVE_SPOT_REVIEW:
+            const newState = {...state}
+            delete newState.reviews[action.reviewId]
+            return newState
         default:
             return state
     }
