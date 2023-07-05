@@ -43,12 +43,12 @@ export const SpotDetails = () => {
             </div>
             <div id="spotImages-container">
                 {filteredSpotImagesPreview.map((img) => (
-                    <div className="main-img" key={img.id}> <img src="https://cdn.britannica.com/79/232779-050-6B0411D7/German-Shepherd-dog-Alsatian.jpg" alt={img.id} /> </div>
+                    <div className="main-img" key={img.id}> <img src={img.url} alt={img.id} /> </div>
                 ))}
                 {/* render the preview spot image in large container on left */}
                 <div id="normal-spotImgs-container">
                     {filteredSpotImages.map((img) => (
-                        <div key={img.id} className="normal-spotImgs"> <img src="https://hips.hearstapps.com/hmg-prod/images/beautiful-smooth-haired-red-cat-lies-on-the-sofa-royalty-free-image-1678488026.jpg?crop=1xw:0.84415xh;center,top" alt={img.id} /> </div>
+                        <div key={img.id} className="normal-spotImgs"> <img src={img.url} alt={img.id} /> </div>
                     ))}
                     {/* render all other images on display grid on right */}
                 </div>
