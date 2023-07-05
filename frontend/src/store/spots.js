@@ -6,6 +6,7 @@ const RETRIEVE_SPOT = '/spots/RETRIEVE_SPOT'
 const UPLOAD_SPOT = '/spots/UPLOAD_SPOT'
 const UPLOAD_SPOT_IMAGE = '/spots/UPLOAD_SPOT_IMAGE'
 const RETRIEVE_ALL_USER_SPOTS = '/spots/RETRIEVE_ALL_USER_SPOTS'
+const PATCH_SPOT = '/spots/PATCH_SPOT'
 
 
 //ACTION CREATORS
@@ -32,6 +33,11 @@ export const uploadSpotImage = (spotImage) => ({
 export const retrieveUserSpots = (spots) => ({
     type: RETRIEVE_ALL_USER_SPOTS,
     spots
+})
+
+export const patchSpot = (updatedSpotInfo) => ({
+    type: PATCH_SPOT,
+    updatedSpotInfo
 })
 
 //THUNKS
@@ -113,6 +119,28 @@ export const getAllUserSpots = () => async (dispatch) => {
     }
 }
 
+// PATCH_SPOT
+export const editSpot = (spotId, spotInfo) => async (dispatch) => {
+
+    try {
+
+        const response = await csrfFetch(`/api/spots/${spotId}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(spotInfo)
+        })
+
+        if(response.ok) {
+            const updatedSpotInfo = await response.json()
+            dispatch(patchSpot(updatedSpotInfo))
+            return "successful" // needed for an undefined error when reading response
+        }
+
+    } catch(err) {
+        return await err.json()
+    }
+}
+
 
 //REDUCER
 const initialState = { spots: {}, spotDetails: {} } // spots key = GET /api/spots (get all spots) ---> can overwrite this key for POST, PUT, and DELETE AND FOR USER SPOTS       spotDetails key = GET /api/spots/:spotId (get details of a spot by id)
@@ -137,6 +165,8 @@ const spotsReducer = (state = initialState, action) => {
                 return userSpotsState.spots[spot.id] = spot
             })
             return userSpotsState
+        case PATCH_SPOT:
+            return {...state, spots: {...state.spots, [action.updatedSpotInfo.id]: action.updatedSpotInfo} }
         default:
             return state
     }

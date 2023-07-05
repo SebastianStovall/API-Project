@@ -36,11 +36,11 @@ export const ManageSpots = () => {
                         <p>{spot.avgRating ? `★${displayAsFloat(spot.avgRating)}` : "New"}</p>
                         {/* if theres a truthy value for avgRating in database, display it as a floating decimal if whole number, otherwise, if no value exists, render New */}
                     </div>
+                    </Link>
                     <div>
-                        <button className="user-spots-update-button">Update</button>
+                        <button className="user-spots-update-button" onClick={() => history.push(`/spots/${spot.id}/edit`)}>Update</button>
                         <button className="user-spots-delete-button">Delete</button>
                     </div>
-                    </Link>
                 </div>
                     })}
                 </div>
