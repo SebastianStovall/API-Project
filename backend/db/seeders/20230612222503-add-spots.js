@@ -21,7 +21,7 @@ module.exports = {
   lat: 30.2672,
   lng: 97.7431,
   name: 'FakeNameOne',
-  description: "Welcome to Austin, Texas. This charming residence offers a comfortable and inviting atmosphere, perfect for a relaxing getaway. With its convenient location and affordable price of $200.00 per night, it's an ideal choice for travelers looking to explore the vibrant city of Austin.",
+  description: "Welcome to Austin, Texas. This charming residence offers a comfortable and inviting atmosphere, perfect for a relaxing getaway.",
   price: 200.00
   },
   {
@@ -33,7 +33,7 @@ module.exports = {
   lat: 43.3226,
   lng: 88.3862,
   name: 'FakeNameTwo',
-  description: "Welcome to my beautiful home in Hartford, Wisconsin. This stunning property provides a luxurious and tranquil retreat, offering breathtaking views of the surrounding countryside. Immerse yourself in nature and indulge in the finest amenities. With a price of $400.00 per night, it's an exceptional choice for those seeking the ultimate getaway.",
+  description: "Welcome to my beautiful home in Hartford, Wisconsin. This stunning property provides a luxurious and tranquil retreat.",
   price: 400.00
   },
   {
@@ -45,7 +45,7 @@ module.exports = {
   lat: 40.7128,
   lng: 74.0060,
   name: 'FakeNameThree',
-  description: "Experience the vibrant energy of the Big Apple right at your doorstep. This modern and chic accommodation offers comfort and convenience, making it the perfect base for exploring the city that never sleeps. Priced at $300.00 per night, it's a great value for your New York adventure.",
+  description: "Experience the vibrant energy of the Big Apple right at your doorstep. This modern and chic accommodation offers.",
   price: 300.00
   },
   {
@@ -57,7 +57,7 @@ module.exports = {
   lat: 47.6062,
   lng: 122.3321,
   name: 'FakeNameFour',
-  description: "This charming house offers a peaceful and idyllic setting, with easy access to the city's famous attractions. Relax on the porch and enjoy the tranquil views or take a short walk to the bustling downtown area. With a price of $150.00 per night, it's a budget-friendly choice for your Seattle getaway.",
+  description: "This charming house offers a peaceful and idyllic setting, with easy access to the city's famous attractions.",
   price: 150.00
   },
   {
@@ -69,7 +69,7 @@ module.exports = {
   lat: 39.7392,
   lng: 104.9903,
   name: 'FakeNameFive',
-  description: "This sleek and contemporary apartment offers a prime location and stylish accommodations. Discover the vibrant city life, visit popular attractions, and indulge in the diverse culinary scene. With a price of $250.00 per night, it's an excellent choice for urban explorers.",
+  description: "This sleek and contemporary apartment offers a prime location and stylish accommodations.",
   price: 250.00
   },
   {
@@ -81,7 +81,7 @@ module.exports = {
   lat: 41.8781,
   lng: 87.6298,
   name: 'FakeNameSix',
-  description: "This stylish loft offers a blend of modern comfort and urban charm, perfect for those seeking a trendy accommodation in the heart of the city. Enjoy the breathtaking skyline, explore cultural attractions, and experience the vibrant nightlife. Priced at $180.00 per night, it's a fantastic choice for your Chicago getaway.",
+  description: "This stylish loft offers a blend of modern comfort and urban charm, perfect for those seeking a trendy accommodation in the heart of the city.",
   price: 180.00
   },
   {
@@ -93,7 +93,7 @@ module.exports = {
   lat: 34.0522,
   lng: 118.2437,
   name: 'FakeNameSeven',
-  description: "Indulge in the epitome of elegance and sophistication with this exclusive property. Enjoy the breathtaking views, relax by the pool, and experience the glamorous lifestyle of the entertainment capital of the world. Priced at $500.00 per night, it's a dream destination for luxury seekers.",
+  description: "Indulge in the epitome of elegance and sophistication with this exclusive property. Enjoy the breathtaking views.",
   price: 500.00
   },
   {
@@ -105,7 +105,7 @@ module.exports = {
   lat: 25.7617,
   lng: 80.1918,
   name: 'FakeNameEight',
-  description: "Embrace the sun, sand, and sea with this exclusive beachside retreat. Indulge in the tropical paradise, relax by the pool, and experience the vibrant nightlife of South Beach. With a price of $400.00 per night, it's an idyllic choice for your Miami vacation.",
+  description: "Embrace the sun, sand, and sea with this exclusive beachside retreat. Indulge in the tropical paradise, relax by the pool.",
   price: 400.00
   },
   {
@@ -117,7 +117,7 @@ module.exports = {
   lat: 51.5074,
   lng: 10.1278,
   name: 'FakeNameNine',
-  description: "This charming residence combines traditional southern hospitality with a touch of British flair. Enjoy the peaceful surroundings, explore the historic landmarks, and savor the local cuisine. With a price of $300.00 per night, it's a delightful choice for a unique Texan experience.",
+  description: "This charming residence combines traditional southern hospitality with a touch of British flair. Enjoy the peaceful surroundings.",
   price: 300.00
   }
     ], { validate: true })
