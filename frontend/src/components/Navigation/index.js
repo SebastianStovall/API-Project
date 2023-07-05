@@ -7,6 +7,8 @@ import OpenModalButton from "../OpenModalButton";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
 import "./Navigation.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCloud } from "@fortawesome/free-solid-svg-icons";
 
 function Navigation({ isLoaded }) {
     const sessionUser = useSelector((state) => state.session.user);
@@ -14,8 +16,8 @@ function Navigation({ isLoaded }) {
     let sessionLinks;
     if (sessionUser) {
         sessionLinks = (
-        <li>
-            <NavLink exact to="/spots/new">Create a Spot</NavLink>
+        <li className="active-session-links-list">
+            <NavLink exact to="/spots/new" className="create-a-spot-navLink-text">Create a New Spot</NavLink>
             <ProfileButton user={sessionUser} />
         </li>
         );
@@ -35,14 +37,17 @@ function Navigation({ isLoaded }) {
     }
 
     return (
-    <ul>
-        <li>
-            <NavLink exact to="/">
-            Home
+    <div id="navigation-container">
+        <div>
+            <NavLink exact to="/" className="remove-underline">
+                <span className="main-logo-text">A</span>
+                <FontAwesomeIcon icon={faCloud} className="cloud-icon" />
             </NavLink>
-        </li>
-    {isLoaded && sessionLinks}
-    </ul>
+        </div>
+        <ul>
+        {isLoaded && sessionLinks}
+        </ul>
+    </div>
     );
 }
 

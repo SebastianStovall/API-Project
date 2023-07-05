@@ -41,15 +41,28 @@ function ProfileButton({ user }) {
 
     return (
         <>
-            <button onClick={openMenu}>
+            <button onClick={openMenu} className="profile-button-icon">
+                <div>
+                    <div className="three-lines"></div>
+                    <div className="three-lines"></div>
+                    <div className="three-lines"></div>
+                </div>
                 <i className="fas fa-user-circle" />
             </button>
             <ul className={ulClassName} ref={ulRef}>
-                <li>{user.username}</li>
-                <li>{user.firstName} {user.lastName}</li>
-                <li>{user.email}</li>
-                <li> <NavLink exact to="/spots/current">Manage Spots</NavLink> </li>
-                <li> <button onClick={logout}>Log Out</button> </li>
+                <div className="center-dropdown">
+                    <li className="dropdown-menu-li-component">Hello, {user.username}</li>
+                </div>
+                {/* <li className="dropdown-menu-li-component">{user.firstName} {user.lastName}</li> */}
+                <div className="center-dropdown">
+                    <li className="dropdown-menu-li-component">{user.email}</li>
+                </div>
+                <div className="center-dropdown manage">
+                    <li className="dropdown-menu-li-component"> <NavLink exact to="/spots/current" className="manage-spot-navLink">Manage Spots</NavLink> </li>
+                </div>
+                <div className="center-dropdown">
+                    <li className="dropdown-menu-li-component"> <button onClick={logout} className="logout-button-dropdown">Log Out</button> </li>
+                </div>
             </ul>
         </>
     );

@@ -1,0 +1,40 @@
+.cloud-icon {
+    height: 40px;
+    color: #73BBC9;
+}
+
+#navigation-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 68px;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.5);
+    border-width: 3px;
+    margin-bottom: 20px;
+}
+
+.main-logo-text {
+    font-size: 50px;
+    font-weight: bold;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    position: relative;
+    left: 11px;
+    bottom: 1px;
+    color: #212A3E;
+}
+
+.remove-underline {
+    text-decoration: none;
+}
+
+.active-session-links-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.create-a-spot-navLink-text {
+    font-size: 18px;
+    text-decoration: none;
+}
