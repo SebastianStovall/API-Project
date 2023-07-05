@@ -14,22 +14,58 @@ module.exports = {
       options.tableName = 'Bookings';
       await Booking.bulkCreate([
         {
-          spotId: 2,
+          spotId: 1,
           userId: 1,
           startDate: '2024-06-03',
           endDate: '2024-08-09'
         },
         {
-          spotId: 3,
+          spotId: 2,
           userId: 2,
-          startDate: '2021-07-03',
-          endDate: '2021-07-05'
+          startDate: '2025-07-03',
+          endDate: '2025-07-05'
         },
         {
-          spotId: 1,
+          spotId: 3,
           userId: 3,
-          startDate: '2021-09-20',
-          endDate: '2021-09-30'
+          startDate: '2025-09-20',
+          endDate: '2025-09-30'
+        },
+        {
+          spotId: 4,
+          userId: 1,
+          startDate: '2026-07-15',
+          endDate: '2026-07-22'
+        },
+        {
+          spotId: 5,
+          userId: 2,
+          startDate: '2027-10-01',
+          endDate: '2027-10-07'
+        },
+        {
+          spotId: 6,
+          userId: 3,
+          startDate: '2028-03-10',
+          endDate: '2028-03-17'
+        },
+        {
+          spotId: 7,
+          userId: 1,
+          startDate: '2026-08-20',
+          endDate: '2026-08-27'
+        },
+        {
+          spotId: 8,
+          userId: 2,
+          startDate: '2027-06-12',
+          endDate: '2027-06-19'
+        },
+        {
+          spotId: 9,
+          userId: 3,
+          startDate: '2028-01-05',
+          endDate: '2028-01-10'
         }
       ], {validate: true})
 
@@ -44,7 +80,7 @@ module.exports = {
     options.tableName = 'Bookings';
     const Op = Sequelize.Op;
     await queryInterface.bulkDelete(options, {
-      startDate: { [Op.in]: ['07/03/2023', '08/11/2023', '09/22/2023'] }
+      startDate: { [Op.in]: [ '2024-06-03', '2025-07-03', '2025-09-20', '2026-07-15', '2027-10-01', '2028-03-10', '2026-08-20', '2027-06-12', '2028-01-05' ] }
     }, {});
   }
 };
