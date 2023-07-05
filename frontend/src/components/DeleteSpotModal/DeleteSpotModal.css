@@ -1,0 +1,50 @@
+#delete-modal-main-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    /* set main styles of the container */
+    display: flex;
+    justify-content: center;
+    border: 6px solid black;
+    border-radius: 20px;
+    width: 400px;
+    height: 300px;
+}
+
+.delete-modal-content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.delete-center-text {
+    text-align: center;
+}
+
+.delete-buttons-container {
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    row-gap: 20px;
+}
+
+.delete-spot-buttons {
+    height: 50px;
+    box-shadow: 7px 5px 5px black;
+    color: white;
+}
+
+.delete-spot-buttons:hover {
+    cursor: pointer;
+}
+
+.yes {
+    background-color: #FF5A5F;
+}
+
+.no {
+    background-color: rgb(99, 97, 97);
+}
