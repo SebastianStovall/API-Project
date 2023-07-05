@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { getSpotReviews } from "../../store/reviews"
 import { useParams } from "react-router-dom"
+import OpenModalButton from "../OpenModalButton"
+import { DeleteReviewModal } from "../DeleteReviewModal"
 
 export const Reviews = ({user, spotOwner}) => {
     const dispatch = useDispatch()
@@ -30,6 +32,7 @@ export const Reviews = ({user, spotOwner}) => {
                     <p>{review.User.firstName}</p>
                     <p>{formatDate(review.createdAt)}</p>
                     <p>{review.review}</p>
+                    {user === review.User.id && ( <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteReviewModal reviewId={review.id} spotId={review.spotId} />} /> ) }
                 </div>
             ))}
         </>
