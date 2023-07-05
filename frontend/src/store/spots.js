@@ -7,6 +7,7 @@ const UPLOAD_SPOT = '/spots/UPLOAD_SPOT'
 const UPLOAD_SPOT_IMAGE = '/spots/UPLOAD_SPOT_IMAGE'
 const RETRIEVE_ALL_USER_SPOTS = '/spots/RETRIEVE_ALL_USER_SPOTS'
 const PATCH_SPOT = '/spots/PATCH_SPOT'
+const REMOVE_SPOT = '/spots/REMOVE_SPOT'
 
 
 //ACTION CREATORS
@@ -38,6 +39,11 @@ export const retrieveUserSpots = (spots) => ({
 export const patchSpot = (updatedSpotInfo) => ({
     type: PATCH_SPOT,
     updatedSpotInfo
+})
+
+export const removeSpot = (spotId) => ({
+    type: REMOVE_SPOT,
+    spotId
 })
 
 //THUNKS
@@ -141,6 +147,20 @@ export const editSpot = (spotId, spotInfo) => async (dispatch) => {
     }
 }
 
+//REMOVE_SPOT
+export const deleteSpot = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'}
+    })
+
+    if(response.ok) { // res.json({message: "successfully deleted"})
+        const message = await response.json()
+        dispatch(removeSpot(spotId))
+        return message
+    }
+}
+
 
 //REDUCER
 const initialState = { spots: {}, spotDetails: {} } // spots key = GET /api/spots (get all spots) ---> can overwrite this key for POST, PUT, and DELETE AND FOR USER SPOTS       spotDetails key = GET /api/spots/:spotId (get details of a spot by id)
@@ -167,6 +187,10 @@ const spotsReducer = (state = initialState, action) => {
             return userSpotsState
         case PATCH_SPOT:
             return {...state, spots: {...state.spots, [action.updatedSpotInfo.id]: action.updatedSpotInfo} }
+        case REMOVE_SPOT:
+            const newStateDelete = {...state}
+            delete newStateDelete.spots[action.spotId]
+            return newStateDelete
         default:
             return state
     }
