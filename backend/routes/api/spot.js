@@ -607,20 +607,20 @@ router.put('/:spotId', requireAuth, validateSpotEditOnly, async(req,res) => {
 })
 
 
-router.delete('/:spotId', async(req,res) => { // put require auth back in
+router.delete('/:spotId', requireAuth, async(req,res) => {
     const spot = await Spot.findByPk(req.params.spotId)
 
-    // if(!spot) {
-    //     res.status(404)
-    //     return res.json({
-    //         message: "Spot couldn't be found"
-    //     })
-    // } else if (spot.ownerId !== req.user.id) {
-    //     res.status(401)
-    //     return res.json({
-    //         message: "You do not have permission to delete this spot"
-    //     })
-    // }
+    if(!spot) {
+        res.status(404)
+        return res.json({
+            message: "Spot couldn't be found"
+        })
+    } else if (spot.ownerId !== req.user.id) {
+        res.status(401)
+        return res.json({
+            message: "You do not have permission to delete this spot"
+        })
+    }
 
     if(spot) {
         await spot.destroy()
