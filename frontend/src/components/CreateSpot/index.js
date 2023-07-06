@@ -69,6 +69,7 @@ export const CreateSpot = () => {
             const errors = response.errors // main backend errors
 
             if(previewImg === "") errors.previewImg = 'Preview image is required'
+            if(description.length < 30) errors.description = "Description must be at least 30 characters"
             if( !(isValidUrl(previewImg)) ) errors.previewImgInvalid = "Image URL must end in .png, .jpg, or .jpeg"
             if( !(isValidUrl(imageUrlOne)) && imageUrlOne !== "" ) errors.imageUrlOne = "Image URL must end in .png, .jpg, or .jpeg"
             if( !(isValidUrl(imageUrlTwo)) && imageUrlTwo !== "" ) errors.imageUrlTwo = "Image URL must end in .png, .jpg, or .jpeg"
@@ -90,6 +91,7 @@ export const CreateSpot = () => {
             } else {
                 dispatch(deleteSpot(response)) // else, delete the spot and have user try again
                 const errors = {}
+                if(description.length < 30) errors.description = "Description must be at least 30 characters" // frontend validation not handled by backend
                 errors.previewImgInvalid = "Please Provide a valid Preview Image"
                 setFormErrors(errors)
             }
