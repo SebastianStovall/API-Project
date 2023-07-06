@@ -38,7 +38,7 @@ export const UpdateSpot = () => {
             setPrice(spotInfo.price)
         }
         once()
-    }, [])
+    }, [dispatch, spotId])
 
     const handleSubmit = async (e) => {
         e.preventDefault()

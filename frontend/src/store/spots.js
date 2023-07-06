@@ -84,10 +84,8 @@ export const createSpot = (formData) => async (dispatch) => {
             const spotInfo = await response.json()
             dispatch(uploadSpot(spotInfo))
             return spotInfo.id
-        } else {
-            const errors = await response.json()
-            return errors
         }
+        
     } catch(err) {
         return await err.json()
     }
