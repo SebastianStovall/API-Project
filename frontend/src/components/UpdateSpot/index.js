@@ -2,23 +2,22 @@ import { useParams, useHistory } from "react-router-dom"
 import { useEffect, useState } from 'react'
 import { editSpot } from "../../store/spots"
 import "./UpdateSpot.css"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { getSpotById } from "../../store/spots"
 
 export const UpdateSpot = () => {
 
     const dispatch = useDispatch()
-    const spotDetails = useSelector((state) => state.spots.spotDetails)
     const history = useHistory()
     const { spotId } = useParams()
 
-    const [address, setAddress] = useState(spotDetails.address)
-    const [city, setCity] = useState(spotDetails.city)
-    const [state, setState] = useState(spotDetails.state)
-    const [country, setCountry] = useState(spotDetails.country)
-    const [name, setName] = useState(spotDetails.name)
-    const [description, setDescription] = useState(spotDetails.description)
-    const [price, setPrice] = useState(spotDetails.price)
+    const [address, setAddress] = useState("")
+    const [city, setCity] = useState("")
+    const [state, setState] = useState("")
+    const [country, setCountry] = useState("")
+    const [name, setName] = useState("")
+    const [description, setDescription] = useState("")
+    const [price, setPrice] = useState("")
     const [formErrors, setFormErrors] = useState({})
 
     const VALID_STATES = [
@@ -28,11 +27,18 @@ export const UpdateSpot = () => {
     ];
 
     useEffect(() => {
-        dispatch(getSpotById(spotId))
-    }, [dispatch])
-
-    useEffect(() => {
-    }, [address, city, state, country, name, description, price])
+        async function once () {
+            const spotInfo = await dispatch(getSpotById(spotId))
+            setAddress(spotInfo.address)
+            setCity(spotInfo.city)
+            setState(spotInfo.state)
+            setCountry(spotInfo.country)
+            setName(spotInfo.name)
+            setDescription(spotInfo.description)
+            setPrice(spotInfo.price)
+        }
+        once()
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
