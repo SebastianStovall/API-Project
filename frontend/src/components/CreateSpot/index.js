@@ -81,15 +81,15 @@ export const CreateSpot = () => {
 
             if(previewImg !== "" && (isValidUrl(previewImg)) ) { // if the preview image is valid, dispatch and push to new spot
 
-                dispatch(createSpotImage(response, true, previewImg))
-                if(isValidUrl(imageUrlOne)) dispatch(createSpotImage(response, false, imageUrlOne))
-                if(isValidUrl(imageUrlTwo)) dispatch(createSpotImage(response, false, imageUrlTwo))
-                if(isValidUrl(imageUrlThree)) dispatch(createSpotImage(response, false, imageUrlThree))
-                if(isValidUrl(imageUrlFour)) dispatch(createSpotImage(response, false, imageUrlFour))
+                await dispatch(createSpotImage(response, true, previewImg))
+                if(isValidUrl(imageUrlOne)) await dispatch(createSpotImage(response, false, imageUrlOne))
+                if(isValidUrl(imageUrlTwo)) await dispatch(createSpotImage(response, false, imageUrlTwo))
+                if(isValidUrl(imageUrlThree)) await dispatch(createSpotImage(response, false, imageUrlThree))
+                if(isValidUrl(imageUrlFour)) await dispatch(createSpotImage(response, false, imageUrlFour))
                 history.push(`/spots/${response}`) // push to new spot page
 
             } else {
-                dispatch(deleteSpot(response)) // else, delete the spot and have user try again
+                await dispatch(deleteSpot(response)) // else, delete the spot and have user try again
                 const errors = {}
                 if(description.length < 30) errors.description = "Description must be at least 30 characters" // frontend validation not handled by backend
                 errors.previewImgInvalid = "Please Provide a valid Preview Image"
