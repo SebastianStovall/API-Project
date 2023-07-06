@@ -268,8 +268,9 @@ export const CreateSpot = () => {
                         {formErrors && <span className='form-errors'>{formErrors.imageUrlFour}</span>}
                     </div>
                 </div>
-
-                <button type='submit'>Create Spot</button>
+                <div id='create-spot-submit-button-container'>
+                    <button type='submit'>Create Spot</button>
+                </div>
 
             </form>
         </div>

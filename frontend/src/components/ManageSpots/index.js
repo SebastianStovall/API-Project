@@ -18,6 +18,8 @@ export const ManageSpots = () => {
         dispatch(getAllUserSpots())
     }, [dispatch])
 
+    if (allUserSpots.length === 0) return <h1><Link exact to="/spots/new">Create a new Spot</Link></h1>
+
     return (
         <div id="manage-spots-main-container">
             <h2>Manage Your Spots</h2>

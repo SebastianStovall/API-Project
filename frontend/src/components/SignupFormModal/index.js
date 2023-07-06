@@ -113,8 +113,8 @@ return (
                     />
                 </div>
             <div className="signup-form-element-container-button">
-                <button type="submit" className="signup-modal-button" disabled={email.length === 0 || username.length === 0 || firstName.length === 0 || lastName.length === 0
-                || password.length === 0 || confirmPassword.length === 0}>Sign Up</button>
+                <button type="submit" className="signup-modal-button" disabled={email.length === 0 || username.length < 4 || firstName.length === 0 || lastName.length === 0
+                || password.length < 6 || confirmPassword.length < 6}>Sign Up</button>
             </div>
             </form>
         </div>
