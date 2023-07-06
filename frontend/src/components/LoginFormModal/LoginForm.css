@@ -1,0 +1,57 @@
+#login-modal-main-container {
+    /* overlay my seperate div that covers the main portal view to get round edges */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    /* set main styles of the container */
+    display: flex;
+    justify-content: center;
+    border: 6px solid black;
+    border-radius: 20px;
+    width: 400px;
+    height: 310px;
+}
+
+.login-text-header {
+    text-align: center;
+}
+
+.login-input-fields {
+    width: 340px;
+    height: 20px;
+    margin-bottom: 15px;
+    border: 3px solid black;
+}
+
+.login-button-submit {
+    margin-top: 10px;
+    width: 347px;
+    height: 50px;
+    background-color: #FF5A5F;
+    box-shadow: 7px 5px 5px black;
+    color: white
+}
+
+.login-button-submit:disabled {
+    width: 347px;
+    height: 50px;
+    background-color: lightgray;
+    box-shadow: 7px 5px 5px darkgray;
+    color: white;
+}
+
+.demo-user-fetch-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.demo-user-text {
+    font-size: 20px;
+}
+
+.errors-login {
+    color: red;
+}

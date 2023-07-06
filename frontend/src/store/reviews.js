@@ -56,17 +56,33 @@ export const getSpotReviews = (spotId) => async (dispatch) => {
 }
 
 //POST SPOT REVIEW
-export const postSpotReview = (spotId, reviewInfo) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(reviewInfo)
-    })
+export const postSpotReview = (spotId, reviewInfo) => async (dispatch, getState) => {
 
-    if(response.ok) {
-        const reviewData = await response.json()
-        dispatch(addSpotReview(reviewData))
+    try {
+
+        const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(reviewInfo)
+        })
+
+        if(response.ok) {
+            const reviewData = await response.json()
+
+            const currentState = getState();
+            const userInfo = currentState.session
+
+            console.log("LOOK HERE FOR USER", userInfo)
+
+            reviewData.User = userInfo.user
+
+            dispatch(addSpotReview(reviewData))
+        }
+
+    } catch(err) {
+        return await err.json()
     }
+
 }
 
 //REMOVE_SPOT_REVIEW
@@ -97,11 +113,11 @@ const reviewsReducer = (state = initialState, action) => {
             return {...state, userReviews: reviewsForUser }
         case LOAD_SPOT_REVIEWS:
             const reviewsForSpot = {}
-            if(action.reviews.Reviews.length > 0) {
+            // if(action.reviews.Reviews.length > 0) {
                 action.reviews.Reviews.forEach((review) => {
                     return reviewsForSpot[review.id] = review;
                 })
-            }
+            // }
             return {...state, reviews: reviewsForSpot}
         case ADD_SPOT_REVIEW:
             return {...state, reviews: {...state.reviews, [action.reviewData.id]: action.reviewData}} // think its correct, check back

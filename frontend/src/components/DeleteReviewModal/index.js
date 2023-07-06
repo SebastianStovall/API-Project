@@ -2,17 +2,23 @@ import { useDispatch } from "react-redux"
 import { useModal } from "../../context/Modal"
 import { deleteSpotReview } from "../../store/reviews"
 import { getSpotById } from "../../store/spots"
+import { getUserReviews } from "../../store/reviews"
+
 import './DeleteReviewModal.css'
 
 export const DeleteReviewModal = ({reviewId, spotId}) => {
     const dispatch = useDispatch()
     const { closeModal } = useModal()
 
-    const handleDeleteReview = () => {
-        dispatch(deleteSpotReview(reviewId))
-        dispatch(getSpotById(spotId))
+    const handleDeleteReview = (e) => {
+        e.preventDefault()
+
+        return dispatch(deleteSpotReview(reviewId))
+        .then(() => dispatch(getSpotById(spotId)) )
+        .then(() => dispatch(getUserReviews()) )
         .then(closeModal)
         .catch(async (res) => console.log(res));
+
     }
 
     const handleCloseModal = () => {

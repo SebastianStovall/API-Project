@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // import font
 import { faStar } from "@fortawesome/free-solid-svg-icons"; // import the specific icon you want and make sure to npm install both and public html has font-awesome css import
 import { postSpotReview } from "../../store/reviews";
 import { useDispatch } from "react-redux";
+import { getSpotById } from "../../store/spots";
+import { getUserReviews } from "../../store/reviews";
 
 export const ReviewModal = ({spotId}) => {
     const dispatch = useDispatch()
@@ -22,7 +24,8 @@ export const ReviewModal = ({spotId}) => {
     }, [rating, reviewText])
 
 
-    const handleReviewSubmit = () => {
+    const handleReviewSubmit = (e) => {
+        e.preventDefault()
 
         const reviewInfo = {
             review: reviewText,
@@ -30,6 +33,8 @@ export const ReviewModal = ({spotId}) => {
         }
 
         return dispatch(postSpotReview(spotId, reviewInfo))
+        .then(() => dispatch(getSpotById(spotId)))
+        .then(() => dispatch(getUserReviews()))
         .then(closeModal)
         .catch(async (res) => console.log(res));
     }
@@ -67,7 +72,7 @@ export const ReviewModal = ({spotId}) => {
                 </div>
 
                 <div id="review-button-container">
-                    <button className="review-submit-button" disabled={Object.values(formErrors).length > 0}>Submit your Review</button>
+                    <button className="review-submit-button" type="submit" disabled={Object.values(formErrors).length > 0}>Submit your Review</button>
                 </div>
             </form>
         </div>

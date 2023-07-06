@@ -1,23 +1,24 @@
-
 import { useParams, useHistory } from "react-router-dom"
 import { useEffect, useState } from 'react'
 import { editSpot } from "../../store/spots"
 import "./UpdateSpot.css"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { getSpotById } from "../../store/spots"
 
 export const UpdateSpot = () => {
 
     const dispatch = useDispatch()
+    const spotDetails = useSelector((state) => state.spots.spotDetails)
     const history = useHistory()
     const { spotId } = useParams()
 
-    const [address, setAddress] = useState("")
-    const [city, setCity] = useState("")
-    const [state, setState] = useState("")
-    const [country, setCountry] = useState("")
-    const [name, setName] = useState("")
-    const [description, setDescription] = useState("")
-    const [price, setPrice] = useState("")
+    const [address, setAddress] = useState(spotDetails.address)
+    const [city, setCity] = useState(spotDetails.city)
+    const [state, setState] = useState(spotDetails.state)
+    const [country, setCountry] = useState(spotDetails.country)
+    const [name, setName] = useState(spotDetails.name)
+    const [description, setDescription] = useState(spotDetails.description)
+    const [price, setPrice] = useState(spotDetails.price)
     const [formErrors, setFormErrors] = useState({})
 
     const VALID_STATES = [
@@ -25,6 +26,10 @@ export const UpdateSpot = () => {
         "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH",
         "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WI", "WY"
     ];
+
+    useEffect(() => {
+        dispatch(getSpotById(spotId))
+    }, [dispatch])
 
     useEffect(() => {
     }, [address, city, state, country, name, description, price])

@@ -40,36 +40,40 @@ function LoginFormModal() {
     };
 
     return (
-        <>
-            <h1>Log In</h1>
+        <div id="login-modal-main-container">
             <form onSubmit={handleSubmit}>
-                <label>
-                Username or Email
-                <input
-                type="text"
-                value={credential}
-                onChange={(e) => setCredential(e.target.value)}
-                required
-            />
-            </label>
-            <label>
-                Password
-                <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-            </label>
-            {errors.credential && (
-                <p>{errors.credential}</p>
-            )}
-            <button type="submit">Log In</button>
+                <h1 className="login-text-header">Log In</h1>
+                    {errors.credential && (
+                        <span className="errors-login">{errors.credential}</span>
+                    )}
+                <div className="login-form-element-container">
+                    <input
+                        className="login-input-fields"
+                        type="text"
+                        value={credential}
+                        onChange={(e) => setCredential(e.target.value)}
+                        required
+                        placeholder="Username or Email"
+                    />
+                </div>
+                <div className="login-form-element-container">
+                    <input
+                        className="login-input-fields"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        placeholder="Password"
+                    />
+                </div>
+                <div className="login-form-element-container">
+                    <button type="submit" className="login-button-submit" disabled={credential.length < 4 || password.length < 6}>Log In</button>
+                </div>
+                <div className="demo-user-fetch-container">
+                    <Link to="/" onClick={demoLogin} exact="true" className="demo-user-text" >Demo User</Link>
+                </div>
             </form>
-
-            <Link to="/" onClick={demoLogin} exact="true" >Demo User</Link>
-
-        </>
+        </div>
     );
 }
 

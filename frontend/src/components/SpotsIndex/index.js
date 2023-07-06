@@ -14,7 +14,7 @@ export const SpotsIndex = ({spots}) => {
     return (
             <div id="landing-page-main-spot-container">
                 <div id="spots-list">
-                    {spots.map((spot) => {
+                    {spots.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).map((spot) => {
                         return <SpotsIndexItem spot={spot} key={spot.id}/>
                     })}
                 </div>
