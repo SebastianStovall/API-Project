@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { createSpot } from '../../store/spots'
 import { createSpotImage } from '../../store/spots'
 import { useHistory } from 'react-router-dom'
+import { deleteSpot } from '../../store/spots'
 
 export const CreateSpot = () => {
 
@@ -74,14 +75,25 @@ export const CreateSpot = () => {
             if( !(isValidUrl(imageUrlThree)) && imageUrlThree !== "" ) errors.imageUrlThree = "Image URL must end in .png, .jpg, or .jpeg"
             if( !(isValidUrl(imageUrlFour)) && imageUrlFour !== "" ) errors.imageUrlFour = "Image URL must end in .png, .jpg, or .jpeg"
             setFormErrors(errors)
-        } else { // response = spot id
-            dispatch(createSpotImage(response, true, previewImg))
-            if(isValidUrl(imageUrlOne)) dispatch(createSpotImage(response, false, imageUrlOne))
-            if(isValidUrl(imageUrlTwo)) dispatch(createSpotImage(response, false, imageUrlTwo))
-            if(isValidUrl(imageUrlThree)) dispatch(createSpotImage(response, false, imageUrlThree))
-            if(isValidUrl(imageUrlFour)) dispatch(createSpotImage(response, false, imageUrlFour))
 
-            history.push(`/spots/${response}`) // push to new spot page
+        } else { // response = spot id
+
+            if(previewImg !== "" && (isValidUrl(previewImg)) ) { // if the preview image is valid, dispatch and push to new spot
+
+                dispatch(createSpotImage(response, true, previewImg))
+                if(isValidUrl(imageUrlOne)) dispatch(createSpotImage(response, false, imageUrlOne))
+                if(isValidUrl(imageUrlTwo)) dispatch(createSpotImage(response, false, imageUrlTwo))
+                if(isValidUrl(imageUrlThree)) dispatch(createSpotImage(response, false, imageUrlThree))
+                if(isValidUrl(imageUrlFour)) dispatch(createSpotImage(response, false, imageUrlFour))
+                history.push(`/spots/${response}`) // push to new spot page
+
+            } else {
+                dispatch(deleteSpot(response)) // else, delete the spot and have user try again
+                const errors = {}
+                errors.previewImgInvalid = "Please Provide a valid Preview Image"
+                setFormErrors(errors)
+            }
+
         }
 
 
