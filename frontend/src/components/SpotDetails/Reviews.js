@@ -4,6 +4,7 @@ import { getSpotReviews } from "../../store/reviews"
 import { useParams } from "react-router-dom"
 import OpenModalButton from "../OpenModalButton"
 import { DeleteReviewModal } from "../DeleteReviewModal"
+import "./Reviews.css"
 
 export const Reviews = ({user, spotOwner}) => {
     const dispatch = useDispatch()
@@ -30,7 +31,7 @@ export const Reviews = ({user, spotOwner}) => {
             .map((review) => (
                 <div key={review.id} className="single-review">
                     <p>{review.User.firstName}</p>
-                    <p>{formatDate(review.createdAt)}</p>
+                    <p className="review-date">{formatDate(review.createdAt)}</p>
                     <p>{review.review}</p>
                     {user === review.User.id && ( <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteReviewModal reviewId={review.id} spotId={review.spotId} />} /> ) }
                 </div>

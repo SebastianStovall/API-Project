@@ -38,8 +38,8 @@ export const SpotDetails = () => {
     return (
         <div id="main-spotDetails-container">
             <div id="spotDetails-headerInfo">
-                <h2>{targetSpot.name}</h2>
-                <p>{`${targetSpot.city}, ${targetSpot.state}, ${targetSpot.country}`}</p>
+                <h2 className="spotDetails-spotName">{targetSpot.name}</h2>
+                <p className="spotDetails-city-state-country-text">{`${targetSpot.city}, ${targetSpot.state}, ${targetSpot.country}`}</p>
             </div>
             <div id="spotImages-container">
                 {filteredSpotImagesPreview.map((img) => (
@@ -54,13 +54,16 @@ export const SpotDetails = () => {
                 </div>
             </div>
             <div id="description-reserve-container">
-                <div className="description-container">
-                    <h3>Hosted By {targetSpot.Owner.firstName} {targetSpot.Owner.lastName}</h3>
+                <div className="description-container-spot-details">
+                    <h3 className="hosted-by-text">Hosted By {targetSpot.Owner.firstName} {targetSpot.Owner.lastName}</h3>
                     <p>{targetSpot.description}</p>
                 </div>
                 <div className="reserve-container">
                     <div id="reserve-info-box">
-                        <div>${targetSpot.price}night</div>
+                        <div className="spotDetail-price-night-container">
+                            <div className="spotDetails-price-text">${targetSpot.price}</div>
+                            <span className="night-text">night</span>
+                        </div>
                         <div>{targetSpot.numReviews === 1 ? `★${displayAsFloat(targetSpot.avgStarRating)} · ${targetSpot.numReviews} review` :
                             targetSpot.avgStarRating ? `★${displayAsFloat(targetSpot.avgStarRating)} · ${targetSpot.numReviews} reviews`
                             :  `★ New `}
@@ -70,7 +73,7 @@ export const SpotDetails = () => {
                 </div>
             </div>
             <div id="review-container">
-                <div>{targetSpot.numReviews === 1 ? `★${displayAsFloat(targetSpot.avgStarRating)} · ${targetSpot.numReviews} review` :
+                <div className="average-reviews-info-reviewSection">{targetSpot.numReviews === 1 ? `★${displayAsFloat(targetSpot.avgStarRating)} · ${targetSpot.numReviews} review` :
                     targetSpot.avgStarRating ? `★${displayAsFloat(targetSpot.avgStarRating)} · ${targetSpot.numReviews} reviews`
                     :  `★ New `}
                 </div>
