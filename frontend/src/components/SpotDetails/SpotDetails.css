@@ -6,6 +6,14 @@
     padding-right: 35px;
 }
 
+.spotDetails-spotName {
+    font-size: 30px;
+}
+
+.spotDetails-city-state-country-text {
+    font-size: 16px;
+    font-weight: bold;
+}
 
 /* spot images container ------ */
 #spotImages-container {
@@ -61,27 +69,77 @@
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-    border: 3px solid red;
+    padding-bottom: 25px;
+    border-bottom: 2px solid black;
 }
 
+.description-container-spot-details {
+    height: fit-content;
+    position: relative;
+    top: -30px;
+}
 
+/* reserve container  */
 .reserve-container {
-    border: 5px solid black;
+    border: 3px solid black;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    width: 450px;
+    height: 125px;
+    /* padding: 10px 10px; */
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+.hosted-by-text {
+    font-size: 28px;
 }
 
 #reserve-info-box {
     display: flex;
+    gap: 190px;
+    align-items: center;
 }
+
+.spotDetails-price-text {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.spotDetail-price-night-container {
+    display: flex;
+    gap: 2px;
+}
+
+.night-text {
+    position: relative;
+    top: 8px;
+    font-size: 17px;
+}
+
+.reserve-button {
+    margin-top: 10px;
+    width: 390px;
+    height: 50px;
+    background-color: #FF5A5F;
+    box-shadow: 7px 5px 5px black;
+    color: white;
+    cursor: pointer;
+}
+
+
 /* description-reserve-area */
 
-#review-container {
-    border: 3px solid green;
-}
+/* #review-container {
+    border: 2px solid red;
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+} */
 
-.single-review {
-    border: 1px solid red;
+.average-reviews-info-reviewSection {
+    font-size: 28px;
 }
