@@ -42,7 +42,8 @@
     height: 50px;
     background-color: #FF5A5F;
     box-shadow: 7px 5px 5px black;
-    color: white
+    color: white;
+    cursor: pointer;
 }
 
 .signup-modal-button:disabled {

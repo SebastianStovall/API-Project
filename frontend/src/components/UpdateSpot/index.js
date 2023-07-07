@@ -64,15 +64,6 @@ export const UpdateSpot = () => {
             history.push(`/spots/${spotId}`)
         }
 
-
-        // clear form values
-        setAddress("")
-        setCity("")
-        setState("")
-        setCountry("")
-        setName("")
-        setDescription("")
-        setPrice("")
     }
 
     return (

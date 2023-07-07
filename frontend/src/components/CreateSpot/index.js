@@ -98,20 +98,6 @@ export const CreateSpot = () => {
 
         }
 
-
-        // clear form values
-        setAddress("")
-        setCity("")
-        setState("")
-        setCountry("")
-        setName("")
-        setDescription("")
-        setPrice("")
-        setPreviewImg("")
-        setImageUrlOne("")
-        setImageUrlTwo("")
-        setImageUrlThree("")
-        setImageUrlFour("")
     }
 
 

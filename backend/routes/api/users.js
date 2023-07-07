@@ -15,7 +15,11 @@ const validateSignup = [
     check('email')
     .exists({ checkFalsy: true })
     .isEmail()
-    .withMessage('Please provide a valid email.'),
+    .withMessage('Please provide a valid email.')
+    .custom(async (value) => {
+        let isEmailUnique = await User.findOne({where: { email: value } })
+        if(isEmailUnique) throw new Error("Email already in use")
+    }),
     check('username')
     .exists({ checkFalsy: true })
     .isLength({ min: 4 })
@@ -23,7 +27,11 @@ const validateSignup = [
     check('username')
     .not()
     .isEmail()
-    .withMessage('Username cannot be an email.'),
+    .withMessage('Username cannot be an email.')
+    .custom(async (value) => {
+        isUsernameUnique = await User.findOne({where: {username: value} })
+        if(isUsernameUnique) throw new Error("Username is already in use")
+    }),
     check('password')
     .exists({ checkFalsy: true })
     .isLength({ min: 6 })
