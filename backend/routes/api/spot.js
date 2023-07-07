@@ -74,7 +74,20 @@ const validateSpot = [
 const validateSpotEditOnly = [
     check('address')
     .exists({checkFalsy: true})
-    .withMessage('Street address is required'),
+    .withMessage('Street address is required')
+    .custom(async (value, {req}) => {
+        const doesAddressExist = await Spot.findOne({
+            where: {
+                address: value,
+                id: {
+                    [Op.ne]: req.params.spotId
+                }
+            }
+        })
+        if(doesAddressExist) {
+            throw new Error('Address must be unique');
+        }
+    }),
     check('city')
     .exists({checkFalsy: true})
     .withMessage('City is required'),
