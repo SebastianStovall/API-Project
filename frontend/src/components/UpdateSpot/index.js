@@ -57,9 +57,7 @@ export const UpdateSpot = () => {
 
         const response = await dispatch(editSpot(spotId, spotInfo)) // attempt to create spot
 
-        console.log(response)
         if (response.errors) {
-            console.log(response.errors)
             const errors = response.errors // main backend errors
             setFormErrors(errors)
         } else {
