@@ -26,7 +26,9 @@ export const ManageSpots = () => {
 
             <div>
                 <div id="spots-list">
-                    {allUserSpots.map((spot) => {
+                    {allUserSpots
+                    .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    .map((spot) => {
                     return <div id="single-spot-main-container" key={spot.id}>
                     <Link to={`/spots/${spot.id}`} className="spot-link" title={spot.name}>
                     {/* <img className="spot-preview-img" src={spot.previewImage} alt={spot.address} /> */}
