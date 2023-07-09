@@ -118,7 +118,7 @@
 
 .reserve-button {
     margin-top: 10px;
-    width: 390px;
+    width: 87%;
     height: 50px;
     background-color: #FF5A5F;
     box-shadow: 7px 5px 5px black;
@@ -139,4 +139,13 @@
     color: white;
     margin-right: 10px;
     cursor: pointer;
+}
+
+
+@media (max-width: 1024px) {
+    #spotImages-container {
+        display: flex;
+        column-gap: 5px;
+        max-height: 350px;
+    }
 }
