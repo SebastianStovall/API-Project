@@ -76,6 +76,7 @@ function Navigation({ isLoaded }) {
             <NavLink exact to="/" className="remove-underline">
                 <span className="main-logo-text">A</span>
                 <FontAwesomeIcon icon={faCloud} className="cloud-icon" />
+                <span className="rest-of-logo-text">ir Stay</span>
             </NavLink>
         </div>
         <ul>

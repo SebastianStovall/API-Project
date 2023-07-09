@@ -33,7 +33,9 @@ export const Reviews = ({user, spotOwner}) => {
                     <p>{review.User.firstName}</p>
                     <p className="review-date">{formatDate(review.createdAt)}</p>
                     <p>{review.review}</p>
+                    <span className="delete-review-style-button-reviews">
                     {user === review.User.id && ( <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteReviewModal reviewId={review.id} spotId={review.spotId} />} /> ) }
+                    </span>
                 </div>
             ))}
         </>

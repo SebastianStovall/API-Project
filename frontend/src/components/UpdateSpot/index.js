@@ -52,7 +52,7 @@ export const UpdateSpot = () => {
             lng: 50.00, // hard code these since i dont have an api to dynamically get these
             name,
             description,
-            price: Number(price)
+            price: Number(Math.abs(price).toFixed(2))
         }
 
         const response = await dispatch(editSpot(spotId, spotInfo)) // attempt to create spot

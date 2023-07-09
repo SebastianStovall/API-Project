@@ -132,3 +132,11 @@
 .average-reviews-info-reviewSection {
     font-size: 28px;
 }
+
+.post-your-review-style-button > button {
+    background-color: rgb(128, 127, 127);
+    box-shadow: 3px 3px black;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+}
