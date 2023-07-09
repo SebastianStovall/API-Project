@@ -23,6 +23,16 @@
     color: #212A3E;
 }
 
+.rest-of-logo-text {
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    position: relative;
+    left: 3px;
+    bottom: 1px;
+    color: #212A3E;
+}
+
 .remove-underline {
     text-decoration: none;
 }
@@ -43,4 +53,11 @@
 #login-Signup-button-container {
     display: flex;
     flex-direction: column;
+}
+
+#login-Signup-button-container > button {
+    border: white;
+    background-color: white;
+    font-weight: bolder;
+    cursor: pointer;
 }

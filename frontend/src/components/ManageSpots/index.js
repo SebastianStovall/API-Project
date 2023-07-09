@@ -42,10 +42,12 @@ export const ManageSpots = () => {
                         {/* if theres a truthy value for avgRating in database, display it as a floating decimal if whole number, otherwise, if no value exists, render New */}
                     </div>
                     </Link>
-                    <div>
+                    <div className="update-delete-buttons-gap">
                         <button className="user-spots-update-button" onClick={() => history.push(`/spots/${spot.id}/edit`)}>Update</button>
                         {/* <button className="user-spots-delete-button">Delete</button> */}
+                        <span className="delete-button-modal-display">
                         <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteSpotModal spotId={spot.id} />} />
+                        </span>
                     </div>
                 </div>
                     })}

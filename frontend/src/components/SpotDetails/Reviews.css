@@ -5,3 +5,11 @@
 .single-review {
     border-bottom: 30px;
 }
+
+.delete-review-style-button-reviews > button {
+    background-color: rgb(128, 127, 127);
+    box-shadow: 3px 3px black;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+}

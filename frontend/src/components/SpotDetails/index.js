@@ -77,7 +77,9 @@ export const SpotDetails = () => {
                     targetSpot.avgStarRating ? `★${displayAsFloat(targetSpot.avgStarRating)} · ${targetSpot.numReviews} reviews`
                     :  `★ New `}
                 </div>
-                { userCanPost && ( <OpenModalButton buttonText={'Post Your Review'} modalComponent={<ReviewModal spotId={spotId}/>} /> )}
+                <span className="post-your-review-style-button">
+                    { userCanPost && ( <OpenModalButton buttonText={'Post Your Review'} modalComponent={<ReviewModal spotId={spotId}/>} /> )}
+                </span>
                 {/* Notice the "Post Your Review" button which is only visible for logged-in users on a Spot's Detail Page if the user didn't post a review for that Spot yet and the user isn't the creator of the spot. */}
                 <div className="review-comment-section-container">
                     <Reviews user={userId} spotOwner={targetSpot.Owner.id}/>

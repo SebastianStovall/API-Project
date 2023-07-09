@@ -60,7 +60,7 @@ export const CreateSpot = () => {
             lng: 50.00, // hard code these since i dont have an api to dynamically get these
             name,
             description,
-            price: Number(price)
+            price: Number(Math.abs(price).toFixed(2)) // turn price into a number, give abs value if negative, and round to two decimal places
         }
 
         const response = await dispatch(createSpot(spot)) // attempt to create spot

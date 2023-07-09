@@ -7,3 +7,26 @@
 .create-new-spot-button-user-page {
     margin-bottom: 40px;
 }
+
+.delete-button-modal-display > button {
+    background-color: rgb(128, 127, 127);
+    box-shadow: 3px 3px black;
+    color: white;
+    cursor: pointer;
+}
+
+.user-spots-update-button {
+    background-color: rgb(128, 127, 127);
+    box-shadow: 3px 3px black;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.create-new-spot-button-user-page {
+    background-color: rgb(128, 127, 127);
+    box-shadow: 3px 3px black;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+}
