@@ -73,6 +73,7 @@
     height: fit-content;
     position: relative;
     top: -30px;
+    flex-basis: 50%;
 }
 
 /* reserve container  */
@@ -96,7 +97,7 @@
 
 #reserve-info-box {
     display: flex;
-    gap: 190px;
+    gap: 70px;
     align-items: center;
 }
 
@@ -142,10 +143,26 @@
 }
 
 
-@media (max-width: 1024px) {
+@media (max-width: 1110px) {
     #spotImages-container {
         display: flex;
         column-gap: 5px;
         max-height: 350px;
+    }
+
+    .reserve-container {
+        width: 30%;
+    }
+
+    .spotDetails-price-text {
+        font-size: 22px;
+    }
+
+    .night-text {
+        font-size: 14px;
+    }
+
+    #reserve-info-box {
+        gap: 25px;
     }
 }

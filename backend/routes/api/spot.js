@@ -60,7 +60,10 @@ const validateSpot = [
     })),
     check('description')
     .exists({checkFalsy: true})
-    .withMessage('Description is required'),
+    .withMessage('Description is required')
+    .custom(async (value) => {
+        if(value.length > 255) throw new Error("Description cannot exceed 255 characters")
+    }),
     check('price')
     .exists({checkFalsy: true})
     .withMessage('Price per day is required')
@@ -124,7 +127,10 @@ const validateSpotEditOnly = [
     })),
     check('description')
     .exists({checkFalsy: true})
-    .withMessage('Description is required'),
+    .withMessage('Description is required')
+    .custom(async (value) => {
+        if(value.length > 255) throw new Error("Description cannot exceed 255 characters")
+    }),
     check('price')
     .exists({checkFalsy: true})
     .withMessage('Price per day is required')
