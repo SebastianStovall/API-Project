@@ -14,6 +14,8 @@ const validateSpot = [
     check('address')
     .exists({checkFalsy: true})
     .withMessage('Street address is required')
+    .isLength({ max: 50 })
+    .withMessage('Address cannot exceed 50 characters')
     .custom(async (value) => {
         const doesAddressExist = await Spot.findOne({
             where: {
@@ -26,7 +28,9 @@ const validateSpot = [
     }),
     check('city')
     .exists({checkFalsy: true})
-    .withMessage('City is required'),
+    .withMessage('City is required')
+    .isLength({ max: 50 })
+    .withMessage('City cannot exceed 50 characters'),
     check('state')
     .exists({checkFalsy: true})
     .withMessage('State is required')
@@ -45,7 +49,9 @@ const validateSpot = [
     }),
     check('country')
     .exists({checkFalsy: true})
-    .withMessage('Country is required'),
+    .withMessage('Country is required')
+    .isLength({ max: 50 })
+    .withMessage('City cannot exceed 50 characters'),
     check('lat')
     .exists({checkFalsy: true})
     .withMessage('Latitude is not valid'),
@@ -78,6 +84,8 @@ const validateSpotEditOnly = [
     check('address')
     .exists({checkFalsy: true})
     .withMessage('Street address is required')
+    .isLength({ max: 50 })
+    .withMessage('Address cannot exceed 50 characters')
     .custom(async (value, {req}) => {
         const doesAddressExist = await Spot.findOne({
             where: {
@@ -93,7 +101,9 @@ const validateSpotEditOnly = [
     }),
     check('city')
     .exists({checkFalsy: true})
-    .withMessage('City is required'),
+    .withMessage('City is required')
+    .isLength({ max: 50 })
+    .withMessage('City cannot exceed 50 characters'),
     check('state')
     .exists({checkFalsy: true})
     .withMessage('State is required')
@@ -112,7 +122,9 @@ const validateSpotEditOnly = [
     }),
     check('country')
     .exists({checkFalsy: true})
-    .withMessage('Country is required'),
+    .withMessage('Country is required')
+    .isLength({ max: 50 })
+    .withMessage('Country cannot exceed 50 characters'),
     check('lat')
     .exists({checkFalsy: true})
     .withMessage('Latitude is not valid'),

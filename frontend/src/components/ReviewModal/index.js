@@ -19,6 +19,7 @@ export const ReviewModal = ({spotId}) => {
     useEffect(() => {
         const errors = {}
         if(reviewText.length <= 9) errors.reviewText = "Review must have a minimum of 10 characters"
+        if(reviewText.length > 255) errors.reviewText = "Review must not exceed 255 characters"
         if(rating === 0) errors.rating = "Please select a star rating"
         setFormErrors(errors)
     }, [rating, reviewText])
