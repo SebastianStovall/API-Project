@@ -91,6 +91,11 @@
     padding-bottom: 10px;
 }
 
+.description-container-spot-details > p {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
 .hosted-by-text {
     font-size: 28px;
 }
