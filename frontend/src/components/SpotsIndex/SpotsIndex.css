@@ -28,20 +28,20 @@
     border: 3px solid black;
 }
 
-
-@media (max-width: 1200px) {
+@media (max-width: 1500px) {
     #spots-list {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media (max-width: 800px) {
+
+@media (max-width: 1110px) {
     #spots-list {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 780px) {
     #spots-list {
         grid-template-columns: 1fr;
     }
