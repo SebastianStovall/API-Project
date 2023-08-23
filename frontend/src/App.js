@@ -10,6 +10,7 @@ import { CreateSpot } from "./components/CreateSpot"
 import { ManageSpots } from "./components/ManageSpots";
 import { UpdateSpot } from "./components/UpdateSpot";
 import { getSpots } from "./store/spots";
+import { Bookings } from "./components/Bookings";
 
 function App() {
   const dispatch = useDispatch();
@@ -37,6 +38,9 @@ function App() {
         </Route>
         <Route exact path="/spots/:spotId/edit">
           <UpdateSpot />
+        </Route>
+        <Route exact path="/spots/:spotId/bookings">
+          <Bookings/>
         </Route>
         <Route exact path="/spots/:spotId">
           <SpotDetails/>

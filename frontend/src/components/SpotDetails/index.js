@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useParams, useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect } from "react"
 import { getSpotById } from "../../store/spots"
@@ -12,6 +12,7 @@ import "./SpotDetails.css"
 export const SpotDetails = () => {
     const dispatch = useDispatch()
     const { spotId } = useParams()
+    const history = useHistory()
     const targetSpot = useSelector((state) => state.spots.spotDetails)
     const getCurrentUser = useSelector((state) => state.session.user);
     const userReviews = useSelector((state) => Object.values(state.reviews.userReviews))
@@ -69,7 +70,7 @@ export const SpotDetails = () => {
                             :  `★ New `}
                         </div>
                     </div>
-                    <button className="reserve-button" onClick={() => alert("Feature Coming Soon")}>Reserve</button>
+                    <button className="reserve-button" onClick={() => history.push(`/spots/${spotId}/bookings`)}>Reserve</button>
                 </div>
             </div>
             <div id="review-container">

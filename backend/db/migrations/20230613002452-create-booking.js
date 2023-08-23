@@ -31,6 +31,10 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
+      guests: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       startDate: {
         type: Sequelize.DATEONLY,
         allowNull: false

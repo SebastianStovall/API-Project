@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
         isDate: true
       }
     },
+    guests: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     endDate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
