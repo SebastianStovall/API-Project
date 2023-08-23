@@ -1,7 +1,6 @@
 #booking-component-main-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     align-content: center;
     justify-content: center;
 }
@@ -14,8 +13,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    border: 1px solid red;
-    width: 400px;
+    /* border: 1px solid red; */
+    width: 450px;
     margin: 0px 0px;
     padding: 0px 0px;
 }
@@ -29,12 +28,7 @@
     margin: 0px;
 }
 
-#booking-form > div:first-child > p {
-    padding: 0px 0px;
-    margin: 0px 0px;
-}
-
-.test-target {
+.react-picker-container {
     margin: 0px 0px;
     padding: 0px 0px;
     display: flex;
@@ -42,4 +36,116 @@
 
 .hide-edit-button {
     display: none;
+}
+
+#date-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#date-container > p {
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#guests-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 20px;
+    border: 1px solid transparent;
+    border-top-color: rgb(184, 182, 182);
+}
+
+#guests-container > p {
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 5px;
+}
+
+#no-date-selected-text {
+    color: grey;
+}
+
+#guest-dropdown-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#guest-dropdown-container > div > span {
+    padding: 0px 4px;
+}
+
+#guest-dropdown-container > div:first-child > label{
+    /* border: 1px solid red; */
+    margin-right: 24.3px;
+}
+
+#guest-dropdown-container > div:nth-child(2) > label {
+    /* border: 1px solid purple; */
+    margin-right: 11px;
+}
+
+#ground-rules-container {
+    border: 1px solid transparent;
+    border-top-color: rgb(184, 182, 182);
+}
+
+
+/* SIDE WITH SPOT DETAILS */
+
+#spot-details-side-panel-container {
+    border: 1px solid rgb(192, 191, 191);
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: 40px;
+    width: 300px;
+    height: 380px;
+}
+
+#spot-details-side-panel-container > div:last-child {
+    border: 1px solid transparent;
+    border-top-color: rgb(184, 182, 182);
+}
+
+#spot-details-img-container {
+    display: flex;
+}
+
+#spot-details-img-container > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 10px;
+    margin-bottom: 30px;
+}
+
+.booking-spot-img {
+    width: 124px;
+    height: 106px;
+    border-radius: 10px;
+    object-position: center;
+}
+
+#booking-spot-details-pricing-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#booking-spot-details-pricing-container > div {
+    display: flex;
+    justify-content: space-between;
+}
+
+#booking-spot-details-pricing-container > div:last-child {
+    border: 1px solid transparent;
+    border-top-color: rgb(184, 182, 182);
+}
+
+#booking-spot-details-pricing-container > div:last-child > p {
+    font-weight: bold;
 }
