@@ -17,55 +17,64 @@ module.exports = {
           spotId: 1,
           userId: 1,
           startDate: '2024-06-03',
-          endDate: '2024-08-09'
+          endDate: '2024-08-09',
+          guests: 1
         },
         {
           spotId: 2,
           userId: 2,
           startDate: '2025-07-03',
-          endDate: '2025-07-05'
+          endDate: '2025-07-05',
+          guests: 2
         },
         {
           spotId: 3,
           userId: 3,
           startDate: '2025-09-20',
-          endDate: '2025-09-30'
+          endDate: '2025-09-30',
+          guests: 3
         },
         {
           spotId: 4,
           userId: 1,
           startDate: '2026-07-15',
-          endDate: '2026-07-22'
+          endDate: '2026-07-22',
+          guests: 4
         },
         {
           spotId: 5,
           userId: 2,
           startDate: '2027-10-01',
-          endDate: '2027-10-07'
+          endDate: '2027-10-07',
+          guests: 5
         },
         {
           spotId: 6,
           userId: 3,
           startDate: '2028-03-10',
-          endDate: '2028-03-17'
+          endDate: '2028-03-17',
+          guests: 6
         },
         {
           spotId: 7,
           userId: 1,
           startDate: '2026-08-20',
-          endDate: '2026-08-27'
+          endDate: '2026-08-27',
+          guests: 7
         },
         {
           spotId: 8,
           userId: 2,
           startDate: '2027-06-12',
-          endDate: '2027-06-19'
+          endDate: '2027-06-19',
+          guests: 8
         },
         {
           spotId: 9,
           userId: 3,
           startDate: '2028-01-05',
-          endDate: '2028-01-10'
+          endDate: '2028-01-10',
+          guests: 9
         }
       ], {validate: true})
 
