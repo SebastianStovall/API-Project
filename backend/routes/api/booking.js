@@ -100,6 +100,11 @@ router.put('/:bookingId', requireAuth, validateBooking, async(req,res) => {
         return res.json({message: "Past bookings can't be modified"})
     }
 
+    if(currentTime >= requestEndDate) {
+        res.status(403)
+        return res.json({message: "Must make a booking for a future date"})
+    }
+
     // if( requestStartTime <= currentTime ) {
     //     res.status(403)
     //     return res.json({message: "Booking must be placed for sometime in the future"})

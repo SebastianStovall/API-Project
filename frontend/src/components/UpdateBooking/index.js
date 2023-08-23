@@ -1,49 +1,22 @@
 import { useParams, useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState, useMemo } from "react"
-import { getBookingsForSpotThunk } from "../../store/bookings"
+import { editBookingThunk, getBookingsForSpotThunk, getUserBookingsThunk } from "../../store/bookings"
 import { getSpotById } from "../../store/spots"
-
 import DatePicker from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css'; // default css for react-datepicker
-import './custom-datepicker.css'
-import "./Bookings.css"
+import { formatDateForDisplay } from "../Bookings"
+import { calculateDaysPassed } from "../Bookings"
+import { formatForDispatch } from "../Bookings"
 
-import { createBookingThunk } from "../../store/bookings"
 
-export function formatDateForDisplay(date) {
-    const options = { month: 'long', day: 'numeric' };
-    return new Intl.DateTimeFormat('en-US', options).format(date);
-}
-
-export function formatForDispatch(dateString) {
-    const currentYear = new Date().getFullYear(); // Get the current year
-    const fullDate = dateString + ' ' + currentYear + ' 00:00:00';
-    const dateObject = new Date(fullDate);
-
-    // Format the date object to YYYY-MM-DD
-    const formattedDate = dateObject.toISOString().slice(0, 10);
-
-    return formattedDate;
-}
-
-export function calculateDaysPassed(startDate, endDate) {
-    if(startDate === null || (new Date(startDate).getTime() > new Date(endDate)) ) return "error"
-    const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
-    const startDateObject = new Date(startDate);
-    const endDateObject = new Date(endDate);
-    // console.log(startDateObject, endDateObject)
-    const timeDifference = endDateObject - startDateObject; // Difference in milliseconds
-    const daysPassed = Math.floor(timeDifference / oneDay);
-    return daysPassed;
-}
-
-export const Bookings = () => {
+export const UpdateBooking = () => {
 
     const dispatch = useDispatch()
-    const {spotId} = useParams()
+    const {bookingId, spotId} = useParams()
     const history = useHistory()
     const currUser = useSelector((state) => state.session.user)
+
+    const userBookings = useSelector((state) => Object.values(state.bookings.userBookings))
     const bookingsForSpot = useSelector((state) => Object.values(state.bookings.bookingsForSpot))
     const spotDetails = useSelector((state) => state.spots.spotDetails)
 
@@ -56,20 +29,53 @@ export const Bookings = () => {
     const [guestCountAdult, setGuestCountAdult] = useState(1)
     const [guestCountChild, setGuestCountChild] = useState(0)
 
+    // need this peice of useState since guests is seperated into 2 peices of useState
+    const [guestTouched, setGuestTouched] = useState(false)
+
     const [daysStaying, setDaysStaying] = useState(0)
     const [formErrors, setFormErrors] = useState({})
 
+
     useEffect(() => {
+        dispatch(getUserBookingsThunk())
         dispatch(getBookingsForSpotThunk(spotId))
         dispatch(getSpotById(spotId))
-    }, [spotId, dispatch])
+    }, [dispatch, spotId])
+
+    useEffect(() => {
+        async function once () {
+            if(userBookings.length) {
+                const targetBooking = userBookings.find((booking) => booking.id === Number(bookingId))
+                const daysPassed = calculateDaysPassed(targetBooking.startDate, targetBooking.endDate)
+
+                // only set the date if the user hasnt modified the dates yet
+                // will need to offset the days by one due to time zones, so that they first initially appear with the correct set date
+                if(startDate === null) {
+                    const offsetStartDate = new Date(targetBooking.startDate)
+                    const formattedStartDate = formatDateForDisplay(offsetStartDate.setDate(offsetStartDate.getDate() + 1))
+                    setStartDate(formattedStartDate)
+                }
+
+                if(endDate === null) {
+                    const offsetEndDate = new Date(targetBooking.endDate)
+                    const formattedEndDate = formatDateForDisplay(offsetEndDate.setDate(offsetEndDate.getDate() + 1))
+                    setEndDate(formattedEndDate)
+                }
+
+                setDaysStaying(daysPassed)
+            }
+        }
+        once()
+    }, [dispatch, spotId, bookingId, userBookings, endDate, startDate])
 
     // this code block would cause infinite re-renders without useMemo hook (used to avoid unncessary re-renders when dependencies (in this case bookings) change)
     const excludedDates = useMemo(() => {
         const takenDatesArray = [];
 
         if (bookingsForSpot) {
-            bookingsForSpot.forEach((booking) => {
+            const spotsNotTiedToUser = bookingsForSpot.filter((booking) => booking.id !== Number(bookingId))
+            spotsNotTiedToUser.forEach((booking) => {
+
                 const { startDate, endDate } = booking;
 
                 const start = new Date(startDate);
@@ -93,12 +99,12 @@ export const Bookings = () => {
         }
 
         return takenDatesArray;
-    }, [bookingsForSpot]);
+    }, [bookingsForSpot, bookingId]);
 
-    if( Object.values(spotDetails).length === 0 ) return null // if this is the first render, return null
-    const previewImg = spotDetails.SpotImages.filter((img) => img.preview === true)[0]
+    if(userBookings.length === 0) return null
+    const targetBooking = userBookings.find((booking) => booking.id === Number(bookingId))
 
-    const handleCreateBooking = async (e) => {
+    const handleEditBooking = async (e) => {
         e.preventDefault()
         const errors = {}
 
@@ -124,40 +130,44 @@ export const Bookings = () => {
             return
         }
 
+
         // set up proper formats of date strings so it can be properly read by backend validations
         const formattedStartDate = formatForDispatch(startDate)
         const formattedEndDate = formatForDispatch(endDate)
-        const totalguests = guestCountAdult + guestCountChild
-        const bookingInfo = {startDate: formattedStartDate, endDate: formattedEndDate, guests: totalguests}
 
-        let response = await dispatch(createBookingThunk(bookingInfo, spotId))
+        console.log(formattedStartDate, formattedEndDate)
+
+        let totalGuests;
+        if(guestTouched) {
+            totalGuests = guestCountAdult + guestCountChild
+        } else {
+            totalGuests = targetBooking.guests
+        }
+
+        const bookingObj = {startDate: formattedStartDate, endDate: formattedEndDate, guests: totalGuests}
+        let response = await dispatch(editBookingThunk(bookingId, bookingObj))
 
         // response will be undefined if no errors
         if(response === undefined) {
-            history.push(`/spots/${spotId}`)
+            history.push(`/bookings/current`)
         } else {
-            const errorObj = response.errors
-            // if the booking date overlaps with existing date, this will hit
-            if(Object.keys(errorObj).length === 2) {
-                errors.startDate = errorObj["startDate"]
-                errors.endDate = errorObj["endDate"]
-                setFormErrors(errors)
-                return
-            } else {
-                // if the first conditional didnt hit, then it means start date came after end date
-                errors.date = response.errors
-                setFormErrors(errors)
-                return
+            if(response.errors) {
+                errors.endDate = response.errors["endDate"]
             }
+            if(response.message) {
+                errors.pastBookings = response.message
+            }
+            setFormErrors(errors)
+            return
         }
 
-
     }
+
 
     return (
         <div id="booking-component-main-container">
 
-            <form id="booking-form" onSubmit={handleCreateBooking}>
+            <form id="booking-form" onSubmit={handleEditBooking}>
                 <h2>Request to book</h2>
                 <h3>Your Trip</h3>
 
@@ -198,14 +208,14 @@ export const Bookings = () => {
                     {startDate === null || endDate === null ? <p id="no-date-selected-text">No Dates Selected...</p> : <p>{startDate} - {endDate}</p>}
                     {formErrors.date && <span className="form-errors">{formErrors.date}</span>}
                     {formErrors.user && <span className="form-errors">{formErrors.user}</span>}
-                    {formErrors.startDate && <p className="form-errors">{formErrors.startDate}</p>}
+                    {formErrors.pastBookings && <p className="form-errors">{formErrors.pastBookings}</p>}
                     {formErrors.endDate && <p className="form-errors">{formErrors.endDate}</p>}
                 </div>
 
                 <div>
                     <div id="guests-container">
                         <p>Guests:</p>
-                        <button onClick={() => setEditingGuest(true)} className={editingGuest ? "hide-edit-button" : ""} type="button">Change</button>
+                        <button onClick={() => {setEditingGuest(true); setGuestTouched(true)}} className={editingGuest ? "hide-edit-button" : ""} type="button">Change</button>
                         {editingGuest ? <div id="guest-dropdown-container">
                             <div>
                                 <label>Adults:</label>
@@ -248,32 +258,28 @@ export const Bookings = () => {
                         </div> : null}
                     </div>
                     <div>
-                        <p>{guestCountAdult + guestCountChild} {guestCountAdult + guestCountChild === 1 ? "guest" : "guests"}</p>
+                        { !guestTouched ? <p>{targetBooking.guests} guests</p> : <p>{guestCountAdult + guestCountChild} {guestCountAdult + guestCountChild === 1 ? "guest" : "guests"}</p> }
                     </div>
                 </div>
 
                 <div id="ground-rules-container">
-                    <h3>Ground Rules</h3>
-                    <p>We ask every guest to remember a few simple things about what makes a <br/> great guest.</p>
-                    <p>-Follow the house rules</p>
-                    <p>-Treat your Host's home like your own</p>
-                    <button type="submit">Request to Book</button>
+                    <button type="submit">Request Changes</button>
                 </div>
             </form>
 
             <div id="spot-details-side-panel-container">
                 <div id="spot-details-img-container">
-                    <img src={previewImg.url} className="booking-spot-img" alt="spot-img-preview" />
+                    <img src={targetBooking?.Spot?.previewImage} className="booking-spot-img" alt="spot-img-preview" />
                     <div>
-                        <p>{spotDetails.name}</p>
+                        <p>{targetBooking?.Spot?.name}</p>
                         <p>★{spotDetails.avgStarRating} ({spotDetails.numReviews} reviews)</p>
                     </div>
                 </div>
                 <div id="booking-spot-details-pricing-container">
                     <h3>Price Details</h3>
                     <div>
-                        <p>${spotDetails.price} x {daysStaying} nights</p>
-                        <p>${spotDetails.price * daysStaying}</p>
+                        <p>${targetBooking?.Spot?.price} x {daysStaying} nights</p>
+                        <p>${targetBooking?.Spot?.price * daysStaying}</p>
                     </div>
                     <div>
                         <p>AirStay Service Fee</p>
@@ -285,7 +291,7 @@ export const Bookings = () => {
                     </div>
                     <div>
                         <p>Total (USD)</p>
-                        {daysStaying === 0 ? <p>$0</p> : <p>${ 54.07 + 24.04 + (spotDetails.price * daysStaying) }</p>}
+                        {daysStaying === 0 ? <p>$0</p> : <p>${ 54.07 + 24.04 + (targetBooking?.Spot?.price * daysStaying) }</p>}
                     </div>
                 </div>
             </div>
