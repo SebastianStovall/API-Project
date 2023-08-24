@@ -5,6 +5,7 @@ const LOAD_ALL_USER_BOOKINGS = "/bookings/LOAD_ALL_USER_BOOKINGS"
 const LOAD_ALL_BOOKINGS_FOR_SPOT = "/bookings/LOAD_ALL_BOOKINGS_FOR_SPOT"
 const CREATE_BOOKING = "/bookings/CREATE_BOOKING"
 const EDIT_BOOKING = "/bookings/EDIT_BOOKING"
+const DELETE_BOOKING = "/bookings/DELETE_BOOKING"
 
 
 //ACTION CREATORS
@@ -27,6 +28,11 @@ export const createBooking = (bookingObj) => ({
 export const editBooking = (bookingObj) => ({
     type: EDIT_BOOKING,
     payload: bookingObj
+})
+
+export const deleteBooking = (bookingId) => ({
+    type: DELETE_BOOKING,
+    bookingId
 })
 
 
@@ -87,6 +93,16 @@ export const editBookingThunk = (bookingId, bookingObj) => async (dispatch) => {
     }
 }
 
+export const deleteBookingThunk = (bookingId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/bookings/${bookingId}`, {
+        method: "DELETE"
+    })
+
+    if(response.ok) {
+        dispatch(deleteBooking(bookingId))
+    }
+}
+
 
 //REDUCER
 const initialState = { userBookings: {}, bookingsForSpot: {} } // userBookings slice of state = GET /api/bookings/current (get all bookings of current user)    bookingsForSpot slice of state = GET /api/spots/:spotId/bookings (get bookings by spotId) --> overwrite this key for POST DELETE and PUT
@@ -112,6 +128,10 @@ const bookingsReducer = (state = initialState, action) => {
                 ...state,
                 userBookings: {...state.userBookings, [action.payload.id]: action.payload}
             }
+        case DELETE_BOOKING:
+            const newState = {...state}
+            delete newState.userBookings[action.bookingId]
+            return newState
         default:
             return state
     }

@@ -1,13 +1,13 @@
 import { useParams, useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState, useMemo } from "react"
-import { editBookingThunk, getBookingsForSpotThunk, getUserBookingsThunk } from "../../store/bookings"
+import { deleteBookingThunk, editBookingThunk, getBookingsForSpotThunk, getUserBookingsThunk } from "../../store/bookings"
 import { getSpotById } from "../../store/spots"
 import DatePicker from "react-datepicker";
 import { formatDateForDisplay } from "../Bookings"
 import { calculateDaysPassed } from "../Bookings"
 import { formatForDispatch } from "../Bookings"
-
+import "./UpdateBooking.css"
 
 export const UpdateBooking = () => {
 
@@ -46,18 +46,18 @@ export const UpdateBooking = () => {
         async function once () {
             if(userBookings.length) {
                 const targetBooking = userBookings.find((booking) => booking.id === Number(bookingId))
-                const daysPassed = calculateDaysPassed(targetBooking.startDate, targetBooking.endDate)
+                const daysPassed = calculateDaysPassed(targetBooking?.startDate, targetBooking?.endDate)
 
                 // only set the date if the user hasnt modified the dates yet
                 // will need to offset the days by one due to time zones, so that they first initially appear with the correct set date
                 if(startDate === null) {
-                    const offsetStartDate = new Date(targetBooking.startDate)
+                    const offsetStartDate = new Date(targetBooking?.startDate)
                     const formattedStartDate = formatDateForDisplay(offsetStartDate.setDate(offsetStartDate.getDate() + 1))
                     setStartDate(formattedStartDate)
                 }
 
                 if(endDate === null) {
-                    const offsetEndDate = new Date(targetBooking.endDate)
+                    const offsetEndDate = new Date(targetBooking?.endDate)
                     const formattedEndDate = formatDateForDisplay(offsetEndDate.setDate(offsetEndDate.getDate() + 1))
                     setEndDate(formattedEndDate)
                 }
@@ -130,7 +130,6 @@ export const UpdateBooking = () => {
             return
         }
 
-
         // set up proper formats of date strings so it can be properly read by backend validations
         const formattedStartDate = formatForDispatch(startDate)
         const formattedEndDate = formatForDispatch(endDate)
@@ -141,13 +140,13 @@ export const UpdateBooking = () => {
         if(guestTouched) {
             totalGuests = guestCountAdult + guestCountChild
         } else {
-            totalGuests = targetBooking.guests
+            totalGuests = targetBooking?.guests
         }
 
         const bookingObj = {startDate: formattedStartDate, endDate: formattedEndDate, guests: totalGuests}
         let response = await dispatch(editBookingThunk(bookingId, bookingObj))
 
-        // response will be undefined if no errors
+        // response will be undefined if no errors guests
         if(response === undefined) {
             history.push(`/bookings/current`)
         } else {
@@ -163,12 +162,18 @@ export const UpdateBooking = () => {
 
     }
 
+    const handleDeleteBooking = async (e) => {
+        e.preventDefault()
+        await dispatch(deleteBookingThunk(bookingId))
+        history.push('/bookings/current')
+    }
+
 
     return (
         <div id="booking-component-main-container">
 
             <form id="booking-form" onSubmit={handleEditBooking}>
-                <h2>Request to book</h2>
+                <h2>Reservation Details</h2>
                 <h3>Your Trip</h3>
 
                 <div id="date-container">
@@ -258,13 +263,18 @@ export const UpdateBooking = () => {
                         </div> : null}
                     </div>
                     <div>
-                        { !guestTouched ? <p>{targetBooking.guests} guests</p> : <p>{guestCountAdult + guestCountChild} {guestCountAdult + guestCountChild === 1 ? "guest" : "guests"}</p> }
+                        { !guestTouched ? <p>{targetBooking?.guests} guests</p> : <p>{guestCountAdult + guestCountChild} {guestCountAdult + guestCountChild === 1 ? "guest" : "guests"}</p> }
                     </div>
                 </div>
 
-                <div id="ground-rules-container">
+                <div id="ground-rules-container-update">
                     <button type="submit">Request Changes</button>
                 </div>
+
+                <div id="cancel-booking-button">
+                    <button type="button" onClick={handleDeleteBooking}>Cancel Reservation</button>
+                </div>
+
             </form>
 
             <div id="spot-details-side-panel-container">
