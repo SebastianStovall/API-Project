@@ -521,7 +521,9 @@ router.get('/:spotId/bookings', requireAuth, async(req,res) => {
             booking = {
                 spotId: booking.spotId,
                 startDate: booking.startDate,
-                endDate: booking.endDate
+                endDate: booking.endDate,
+                id: booking.id,
+                guests: booking.guests
             }
             return booking
         }
@@ -722,15 +724,15 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) =>
 
     if(!spotToBook) {
         res.status(404)
-        return res.json({message: "Spot couldn't be found"})
+        return res.json({errors: "Spot couldn't be found"})
     }
 
     if (spotToBook.ownerId === req.user.id) {
         res.status(401) //unauthorized
-        return res.json({message: "You are not authorized to create bookings for spots you currently own"})
+        return res.json({errors: "You are not authorized to create bookings for spots you currently own"})
     }
 
-    const {startDate, endDate} = req.body
+    const {startDate, endDate, guests} = req.body
 
     let currentDate = new Date()
     let currentTime = currentDate.getTime()
@@ -738,9 +740,10 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) =>
     let requestStartDate = new Date(startDate)
     const requestStartTime = requestStartDate.getTime()
 
-    if( requestStartTime <= currentTime ) {
+    // if the start date comes after end date and if the request doesnt land on the same day as today..., then throw an error (offset request by 1 to account for timezone)
+    if( requestStartTime <= currentTime && (currentDate.getDate() !== requestStartDate.getDate() + 1) ) {
         res.status(403)
-        return res.json({message: "Booking must be placed for sometime in the future"})
+        return res.json({errors: "Booking must be placed for sometime in the future"})
     }
 
 
@@ -789,6 +792,7 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) =>
     const newBooking = await Booking.create({
         spotId: spotToBook.id,
         userId: req.user.id,
+        guests: guests,
         startDate,
         endDate
     })

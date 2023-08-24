@@ -100,6 +100,11 @@ router.put('/:bookingId', requireAuth, validateBooking, async(req,res) => {
         return res.json({message: "Past bookings can't be modified"})
     }
 
+    if(currentTime >= requestEndDate) {
+        res.status(403)
+        return res.json({message: "Must make a booking for a future date"})
+    }
+
     // if( requestStartTime <= currentTime ) {
     //     res.status(403)
     //     return res.json({message: "Booking must be placed for sometime in the future"})
@@ -183,10 +188,10 @@ router.delete('/:bookingId', requireAuth, async(req,res) => {
     const currentDate = new Date()
     const currentTime = currentDate.getTime()
 
-    if (currentTime >= timeOfBooking) {
-        res.status(403)
-        return res.json({message: "Bookings that have been started can't be deleted"})
-    }
+    // if (currentTime >= timeOfBooking) {
+    //     res.status(403)
+    //     return res.json({message: "Bookings that have been started can't be deleted"})
+    // }
 
     await bookingToDelete.destroy()
     return res.json({message: "Successfully deleted"})
