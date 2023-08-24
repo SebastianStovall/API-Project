@@ -1,0 +1,75 @@
+#user-bookings-main-container {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    gap: 20px;
+}
+
+.user-booking-single-component {
+    display: flex;
+    border: 1px solid rgb(178, 176, 176);
+    width: 700px;
+    height: 150px;
+    border-radius: 10px;
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+.user-booking-single-component:hover {
+    box-shadow: 5px 5px 5px rgba(178, 176, 176);
+}
+
+.user-booking-single-component > div:nth-child(2) > h3 {
+    padding: 0px;
+    margin: 0px;
+    margin-top: 10px;
+}
+
+#user-booking-image-container {
+    width: 300px;
+    height: 150px;
+}
+
+#user-booking-image-container > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 10px;
+}
+
+#reservation-details-box {
+    display: flex;
+    align-items: flex-start;
+    margin: 0px;
+    padding: 0px;
+}
+
+#reservation-details-box > p {
+    margin: 0px;
+    padding: 0px;
+    margin-left: 5px;
+}
+
+.user-booking-single-component > div:last-child {
+    display: flex;
+    justify-content: center;
+    /* align-items: flex-end; */
+    overflow-wrap: break-word;
+    word-break: break-word;
+    width: 150px;
+}
+
+#date-container-user-booking > p {
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 10px;
+}
+
+#date-container-user-booking > p:last-child {
+    color: grey;
+    margin-left: 8px;
+}

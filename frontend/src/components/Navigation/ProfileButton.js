@@ -59,6 +59,7 @@ function ProfileButton({ user }) {
                 </div>
                 <div className="center-dropdown manage">
                     <li className="dropdown-menu-li-component"> <NavLink exact to="/spots/current" className="manage-spot-navLink">Manage Spots</NavLink> </li>
+                    <li className="dropdown-menu-li-component"> <NavLink exact to="/bookings/current" className="manage-spot-navLink">My Trips</NavLink> </li>
                 </div>
                 <div className="center-dropdown">
                     <li className="dropdown-menu-li-component"> <button onClick={logout} className="logout-button-dropdown">Log Out</button> </li>
