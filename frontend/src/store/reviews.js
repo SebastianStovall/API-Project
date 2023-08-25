@@ -6,6 +6,8 @@ const LOAD_SPOT_REVIEWS = '/spots/LOAD_SPOT_REVIEWS'
 const ADD_SPOT_REVIEW = '/spots/ADD_SPOT_REVIEW'
 const REMOVE_SPOT_REVIEW = '/reviews/REMOVE_SPOT_REVIEW'
 
+const EDIT_SPOT_REVIEW = '/reviews/EDIT_SPOT_REVIEW'
+
 
 //ACTION CREATORS
 export const loadUserReviews = (reviews) => ({
@@ -26,6 +28,11 @@ export const addSpotReview = (reviewData) => ({
 export const removeSpotReview = (reviewId) => ({
     type: REMOVE_SPOT_REVIEW,
     reviewId
+})
+
+export const editReview = (reviewObj) => ({
+    type: EDIT_SPOT_REVIEW,
+    payload: reviewObj
 })
 
 
@@ -100,6 +107,29 @@ export const deleteSpotReview = (reviewId) => async (dispatch) => {
 }
 
 
+// EDIT REVIEW
+export const editReviewThunk = (reviewId, reviewObj) => async (dispatch) => {
+
+    try {
+
+        const response = await csrfFetch(`/api/reviews/${reviewId}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(reviewObj)
+        })
+
+        if(response.ok) {
+            const updatedReviewInfo = await response.json()
+            dispatch(editReview(updatedReviewInfo))
+            return "successful" // needed for an undefined error when reading response
+        }
+
+    } catch(err) {
+        return await err.json()
+    }
+}
+
+
 //REDUCER
 const initialState = { userReviews: {}, reviews: {} } // userReviews slice of state = GET /api/reviews/current (get reviews of current user)    reviews slice of state = GET /api/spots/:spotId/reviews (get reviews by spotId) --> overwrite this key for POST DELETE and PUT
 
@@ -125,6 +155,20 @@ const reviewsReducer = (state = initialState, action) => {
             const newState = {...state}
             delete newState.reviews[action.reviewId]
             return newState
+        case EDIT_SPOT_REVIEW:
+            const updatedReview = action.payload;
+            const updatedReviews = { ...state.reviews };
+            updatedReviews[updatedReview.id] = updatedReview;
+
+            return {
+                ...state,
+                reviews: updatedReviews,
+                userReviews: {
+                    ...state.userReviews,
+                    [updatedReview.id]: updatedReview
+                }
+            };
+
         default:
             return state
     }

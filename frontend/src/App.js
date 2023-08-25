@@ -13,6 +13,7 @@ import { getSpots } from "./store/spots";
 import { Bookings } from "./components/Bookings";
 import { UserBookings } from "./components/UserBookings";
 import { UpdateBooking } from "./components/UpdateBooking";
+import { ManageReviews } from "./components/ManageReviews";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,6 +41,9 @@ function App() {
         </Route>
         <Route exact path="/bookings/current">
           <UserBookings/>
+        </Route>
+        <Route exact path="/reviews/current">
+          <ManageReviews />
         </Route>
         <Route exact path="/bookings/manage/:bookingId/:spotId">
           <UpdateBooking/>
