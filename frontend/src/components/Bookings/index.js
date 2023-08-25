@@ -143,6 +143,11 @@ export const Bookings = () => {
                 errors.endDate = errorObj["endDate"]
                 setFormErrors(errors)
                 return
+            } else if (Object.keys(response).length === 4) {
+                // this will hit if the end date comes before the starting date
+                errors.date = response.errors.endDate
+                setFormErrors(errors)
+                return
             } else {
                 // if the first conditional didnt hit, then it means start date came after end date
                 errors.date = response.errors

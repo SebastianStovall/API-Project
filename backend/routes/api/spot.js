@@ -740,10 +740,19 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async(req,res) =>
     let requestStartDate = new Date(startDate)
     const requestStartTime = requestStartDate.getTime()
 
+    let requestEndDate = new Date(endDate)
+    const requestEndTime = requestEndDate.getTime()
+
     // if the start date comes after end date and if the request doesnt land on the same day as today..., then throw an error (offset request by 1 to account for timezone)
     if( requestStartTime <= currentTime && (currentDate.getDate() !== requestStartDate.getDate() + 1) ) {
         res.status(403)
         return res.json({errors: "Booking must be placed for sometime in the future"})
+    }
+
+    if(requestEndTime < requestStartTime) {
+        res.status(403)
+        console.log("LOOOOOOOOOOOOOOOOOOK")
+        return res.json({errors: "End date must come after the starting date"})
     }
 
 
