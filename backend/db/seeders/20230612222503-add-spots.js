@@ -119,7 +119,43 @@ module.exports = {
   name: 'FakeNameNine',
   description: "This charming residence combines traditional southern hospitality with a touch of British flair. Enjoy the peaceful surroundings.",
   price: 300.00
-  }
+  },
+  {
+    ownerId: 1,
+    address: '782 Flavor Ave',
+    city: 'Flavor',
+    state: 'FL',
+    country: 'United States',
+    lat: 51.5074,
+    lng: 10.1278,
+    name: 'FakeNameTen',
+    description: "Escape to this cozy cabin nestled in the heart of Florida's enchanting wilderness. Experience the serenity of nature right at your doorstep",
+    price: 199.32
+    },
+    {
+      ownerId: 2,
+      address: '643 Rainbow Rd',
+      city: 'Dixon',
+      state: 'RI',
+      country: 'United States',
+      lat: 51.5074,
+      lng: 10.1278,
+      name: 'FakeNameEleven',
+      description: "Discover the charm of this hidden gem in picturesque Dixon, Rhode Island. Immerse yourself in the tranquility of nature and unwind in style.",
+      price: 169.43
+      },
+      {
+        ownerId: 3,
+        address: '238 Boulder Street',
+        city: 'Martin',
+        state: 'CO',
+        country: 'United States',
+        lat: 51.5074,
+        lng: 10.1278,
+        name: 'FakeNameTwelve',
+        description: "Discover the charm of this hidden gem in picturesque Dixon, Rhode Island. Immerse yourself in the tranquility of nature and unwind in style.",
+        price: 289.32
+        }
     ], { validate: true })
   },
 
@@ -127,7 +163,7 @@ module.exports = {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
     await queryInterface.bulkDelete(options, {
-      name: { [Op.in]: ['FakeNameOne', 'FakeNameTwo', 'FakeNameThree', 'FakeNameFour', 'FakeNameFive', 'FakeNameSix', 'FakeNameSeven', 'FakeNameEight', 'FakeNameNine' ] }
+      name: { [Op.in]: ['FakeNameOne', 'FakeNameTwo', 'FakeNameThree', 'FakeNameFour', 'FakeNameFive', 'FakeNameSix', 'FakeNameSeven', 'FakeNameEight', 'FakeNameNine', "FakeNameTen", "FakeNameEleven", "FakeNameTwelve" ] }
     }, {});
   }
 };

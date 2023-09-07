@@ -18,6 +18,18 @@ export const SpotsIndex = ({spots}) => {
                         return <SpotsIndexItem spot={spot} key={spot.id}/>
                     })}
                 </div>
+                <footer>
+                    <div id='footer-container'>
+                        <div id='footer-title'>
+                            <a href="https://github.com/SebastianStovall" target="blank"> <i class="fab fa-github"></i> <span className="label">GitHub</span> </a>
+                        </div>
+                            <ul id="footer-list">
+                                <li>
+                                    <a href="https://www.linkedin.com/in/sebastian-stovall-a17a8a211/" target="blank">  <i class="fab fa-linkedin"></i> <span className="label">LinkedIn</span> </a>
+                                </li>
+                            </ul>
+                    </div>
+                </footer>
             </div>
     )
 }

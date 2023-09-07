@@ -73,7 +73,29 @@ module.exports = {
         userId: 3,
         review: 'The elegant spot in the heart of London, Texas, exceeded our expectations. We had a memorable stay and would highly recommend it to others.',
         stars: 5
+      },
+
+      {
+        spotId: 10,
+        userId: 3,
+        review: 'The cabin in the woods was a cozy retreat. We loved the peaceful surroundings and the warm fireplace. A perfect escape from the city!',
+        stars: 4
+      },
+
+      {
+        spotId: 11,
+        userId: 1,
+        review: 'Our stay in the city apartment was excellent. It was conveniently located near all the attractions.',
+        stars: 5
+      },
+
+      {
+        spotId: 12,
+        userId: 1,
+        review: 'The mountain chalet exceeded our expectations. The views were breathtaking, and the hot tub was great after hiking.',
+        stars: 3
       }
+
     ], { validate: true })
   },
 

@@ -278,7 +278,7 @@ export const Bookings = () => {
                     <h3>Price Details</h3>
                     <div>
                         <p>${spotDetails.price} x {daysStaying} nights</p>
-                        <p>${spotDetails.price * daysStaying}</p>
+                        <p>${(spotDetails.price * daysStaying).toFixed(2)}</p>
                     </div>
                     <div>
                         <p>AirStay Service Fee</p>
@@ -290,7 +290,7 @@ export const Bookings = () => {
                     </div>
                     <div>
                         <p>Total (USD)</p>
-                        {daysStaying === 0 ? <p>$0</p> : <p>${ 54.07 + 24.04 + (spotDetails.price * daysStaying) }</p>}
+                        {daysStaying === 0 ? <p>$0</p> : <p>${ (54.07 + 24.04 + spotDetails.price * daysStaying).toFixed(2) }</p>}
                     </div>
                 </div>
             </div>
