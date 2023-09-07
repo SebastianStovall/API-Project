@@ -34,7 +34,8 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-    border: 2px solid black;
+    border: 1px solid black;
+    border-radius: 10px;
 }
 
 #normal-spotImgs-container {
@@ -49,7 +50,8 @@
 .normal-spotImgs {
     margin: 0;
     padding: 0;
-    border: 2px solid black;
+    border: 1px solid black;
+    border-radius: 10px;
 }
 
 .normal-spotImgs img {

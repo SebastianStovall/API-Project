@@ -75,6 +75,27 @@ module.exports = {
           startDate: '2028-01-05',
           endDate: '2028-01-10',
           guests: 9
+        },
+        {
+          spotId: 10,
+          userId: 3,
+          startDate: '2024-02-15',
+          endDate: '2024-02-20',
+          guests: 5
+        },
+        {
+          spotId: 11,
+          userId: 1,
+          startDate: '2024-05-10',
+          endDate: '2024-05-15',
+          guests: 7
+        },
+        {
+          spotId: 12,
+          userId: 2,
+          startDate: '2024-08-22',
+          endDate: '2024-08-27',
+          guests: 3
         }
       ], {validate: true})
 
@@ -89,7 +110,7 @@ module.exports = {
     options.tableName = 'Bookings';
     const Op = Sequelize.Op;
     await queryInterface.bulkDelete(options, {
-      startDate: { [Op.in]: [ '2024-06-03', '2025-07-03', '2025-09-20', '2026-07-15', '2027-10-01', '2028-03-10', '2026-08-20', '2027-06-12', '2028-01-05' ] }
+      startDate: { [Op.in]: [ '2024-06-03', '2025-07-03', '2025-09-20', '2026-07-15', '2027-10-01', '2028-03-10', '2026-08-20', '2027-06-12', '2028-01-05', '2024-02-15', '2024-05-10', '2024-08-22'] }
     }, {});
   }
 };

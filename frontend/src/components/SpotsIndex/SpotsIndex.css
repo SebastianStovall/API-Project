@@ -25,7 +25,8 @@
 .spot-preview-img {
     width: 100%;
     height: 300px;
-    border: 3px solid black;
+    border: 1px solid black;
+    border-radius: 10px;
 }
 
 @media (max-width: 1500px) {
@@ -45,4 +46,60 @@
     #spots-list {
         grid-template-columns: 1fr;
     }
+}
+
+
+
+/* FOOTER */
+
+#footer-container {
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #070707; */
+    height: 75px;
+    width: 100%;
+    gap: 10%;
+    border-top: 1px solid white;
+    margin-top: 30px;
+}
+
+#footer-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+    align-items: center;
+}
+
+#footer-title > h1 {
+    color: black;
+    font-style: italic;
+}
+
+#footer-info > h2,
+    ul,
+    li {
+    color: black;
+    list-style: none;
+}
+
+.fa-github {
+    color: black;
+    font-size: 15px;
+}
+
+.fa-linkedin {
+    color: black;
+    font-size: 15px;
+}
+
+.label {
+    color: black;
+    font-size: 15px;
+}
+
+a {
+    text-decoration: none;
 }

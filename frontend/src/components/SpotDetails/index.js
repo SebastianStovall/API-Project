@@ -7,6 +7,8 @@ import { displayAsFloat } from "../../store/spots"
 import { getUserReviews } from "../../store/reviews"
 import OpenModalButton from "../OpenModalButton"
 import { ReviewModal } from "../ReviewModal"
+import LoginFormModal from "../LoginFormModal"
+import { useModal } from "../../context/Modal"
 import "./SpotDetails.css"
 
 export const SpotDetails = () => {
@@ -19,6 +21,8 @@ export const SpotDetails = () => {
 
     const doesUserHaveComment = userReviews.filter((review) => review.spotId === Number(spotId)) // see if user already has a comment for the spot
     const userId = getCurrentUser ? getCurrentUser.id : null // get the current user's id
+
+    const { setModalContent } = useModal();
 
     useEffect(() => {
         dispatch(getSpotById(spotId))
@@ -34,6 +38,16 @@ export const SpotDetails = () => {
     if( userId !== null && (targetSpot.Owner.id !== userId) && (doesUserHaveComment.length === 0) ) { // if user does not own spot AND user is signed in AND user does not have a comment, then user CAN post
         userCanPost = true
     }
+
+    const handleReserveClick = () => {
+        if (getCurrentUser === null) {
+            // Set the modal content to your login form component
+            setModalContent(<LoginFormModal />);
+        } else {
+            // Redirect to the bookings page when the user is logged in
+            history.push(`/spots/${spotId}/bookings`);
+        }
+    };
 
 
     return (
@@ -70,7 +84,7 @@ export const SpotDetails = () => {
                             :  `★ New `}
                         </div>
                     </div>
-                    <button className="reserve-button" onClick={() => history.push(`/spots/${spotId}/bookings`)}>Reserve</button>
+                    <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
                 </div>
             </div>
             <div id="review-container">
